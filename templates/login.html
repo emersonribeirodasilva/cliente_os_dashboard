@@ -6,6 +6,25 @@
     <title>Login</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            background: url("{{ url_for('static', filename='img/fundo.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+        }
+        .login-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            margin-top: 50px;
+        }
+        header h1 {
+            text-align: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            padding: 20px 0;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -15,36 +34,47 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <form method="POST" action="/login">
-                    <h3 class="text-center mb-4">Login</h3>
-                    
-                    {% if error %}
-                        <div class="alert alert-danger" role="alert">
-                            {{ error }}
+                <div class="login-container">
+                    <form method="POST" action="/">
+                        <h3 class="text-center mb-4">Login</h3>
+                        
+                        {% if error %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </div>
+                        {% endif %}
+
+                        <div class="form-group">
+                            <label for="username">Usuário</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
                         </div>
-                    {% endif %}
+                        
+                        <div class="form-group">
+                            <label for="password">Senha</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+    
+                        <div class="form-group">
+                            <label for="tipo">Tipo de Usuário</label>
+                            <select class="form-control" id="tipo" name="tipo" required>
+                                <option value="cliente">Cliente</option>
+                                <option value="suporte">Suporte</option>
+                            </select>
+                        </div>
+                        </div>
 
-                    <div class="form-group">
-                        <label for="username">Usuário</label>
-                        <input type="text" class="form-control" id="username" name="username" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="password">Senha</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+                        <button type="submit" class="btn btn-primary btn-block">Entrar</button>
 
-                    <div class="text-center mt-3">
-                        <a href="/cadastro_usuario" class="btn btn-secondary">Fazer Cadastro</a>
-                    </div>
-                </form>
+                        <div class="text-center mt-3">
+                            <a href="/cadastro_usuario" class="btn btn-secondary">Fazer Cadastro</a>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Link para os scripts do Bootstrap -->
+    <!-- Scripts do Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

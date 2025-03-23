@@ -1,8 +1,15 @@
 /* Estilo de fundo com animação */
 body {
-    background: linear-gradient(45deg, #6a11cb, #2575fc);
+    background: linear-gradient(45deg, #dfe6e9, #b2bec3); /* Cores suaves de cinza */
     background-size: 400% 400%;
-    animation: gradientAnimation 10s ease infinite;
+    animation: gradientAnimation 12s ease infinite;
+    font-family: 'Arial', sans-serif;
+    color: #2d3436; /* Texto principal mais escuro para contraste */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Para ocupar toda a altura da tela */
+    margin: 0;
 }
 
 @keyframes gradientAnimation {
@@ -11,27 +18,116 @@ body {
     100% { background-position: 0% 50%; }
 }
 
+/* Títulos e textos */
+h2 {
+    font-family: 'Arial', sans-serif;
+    color: #2d3436; /* Cor do título mais suave */
+    font-weight: 600;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Estilo para o container de navegação dos botões */
+.container {
+    text-align: center;
+    width: 100%;
+    max-width: 800px; /* Limita a largura para o conteúdo não ficar muito largo */
+}
+
+/* Estilo para o container de botões */
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
 /* Customizando o botão */
-.btn-primary, .btn-success {
+button {
     font-size: 16px;
     padding: 12px 20px;
     text-transform: uppercase;
     letter-spacing: 1px;
+    border-radius: 25px; /* Bordas arredondadas */
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    background-color: #b2bec3; /* Cor de fundo suave */
+    color: #fff;
+    margin: 10px;
+    width: 200px; /* Ajuste do tamanho dos botões */
+    min-width: 160px; /* Tamanho mínimo dos botões */
 }
 
+/* Efeito hover nos botões */
+button:hover {
+    background-color: #95a5a6; /* Cor mais escura ao passar o mouse */
+    transform: scale(1.05);
+}
+
+button:active {
+    background-color: #7f8c8d; /* Mais escuro quando pressionado */
+}
+
+/* Estilo da tabela */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #dfe6e9; /* Borda cinza clara */
+    font-size: 16px;
+}
+
+th {
+    background-color: #dfe6e9; /* Cabeçalhos com cor leve de cinza */
+}
+
+/* Estilo da célula de ações */
+td.action-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    justify-items: center;
+}
+
+/* Estilo dos botões dentro da tabela */
+td button {
+    padding: 10px 15px;
+    background-color: #dfe6e9; /* Cinza claro */
+    color: #2d3436; /* Texto escuro */
+    font-size: 14px;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.2s ease;
+    border: none;
+}
+
+/* Efeito hover nos botões dentro da tabela */
+td button:hover {
+    background-color: #b2bec3; /* Cor de fundo mais escura no hover */
+    transform: scale(1.05);
+}
+
+td button:active {
+    background-color: #95a5a6; /* Mais escuro quando pressionado */
+}
+
+/* Estilo para o card */
 .card {
     border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Títulos e textos */
-h2 {
-    font-family: 'Arial', sans-serif;
-    color: #333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
+    background-color: white;
+    padding: 20px;
+    margin-top: 20px;
 }
 
 /* Animação de foco nos inputs */
 input:focus {
-    border-color: #2575fc;
-    box-shadow: 0 0 5px rgba(37, 117, 252, 0.5);
+    border-color: #95a5a6; /* Cinza claro no foco */
+    box-shadow: 0 0 8px rgba(149, 165, 166, 0.5); /* Suave sombra cinza */
 }
