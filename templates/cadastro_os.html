@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Ordem de Serviço</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Cadastro de Ordem de Serviço</h1>
+    <form action="/cadastro_os" method="POST">
+        <label for="cliente_id">Cliente:</label>
+        <select id="cliente_id" name="cliente_id" required>
+            <!-- Aqui você pode carregar dinamicamente os clientes -->
+            <option value="1">Cliente 1</option>
+            <option value="2">Cliente 2</option>
+        </select><br><br>
+
+        <label for="equipamento_id">Equipamento:</label>
+        <select id="equipamento_id" name="equipamento_id" required>
+            <!-- Aqui você pode carregar dinamicamente os equipamentos -->
+            <option value="1">Equipamento 1</option>
+            <option value="2">Equipamento 2</option>
+        </select><br><br>
+
+        <label for="descricao">Descrição da OS:</label>
+        <textarea id="descricao" name="descricao" required></textarea><br><br>
+
+        <button type="submit">Cadastrar OS</button>
+    </form>
+    <br>
+    <a href="/">Voltar para a Página Inicial</a>
+</body>
+</html>

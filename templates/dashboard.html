@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Dashboard</h1>
+    <div>
+        <h2>Estatísticas</h2>
+        <p>Total de Clientes: 100</p>
+        <p>Total de Equipamentos: 150</p>
+        <p>Total de Ordens de Serviço: 50</p>
+    </div>
+    <div>
+        <h2>Ordens de Serviço Recentes</h2>
+        <ul>
+            <li>OS #1 - Cliente 1 - Em andamento</li>
+            <li>OS #2 - Cliente 2 - Finalizado</li>
+            <li>OS #3 - Cliente 3 - Aberto</li>
+        </ul>
+    </div>
+    <br>
+    <a href="/">Voltar para a Página Inicial</a>
+</body>
+</html>

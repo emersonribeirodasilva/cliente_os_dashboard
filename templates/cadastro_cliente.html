@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Cliente</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Sistema de Gestão de OS</h1>
+    </header>
+    
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form method="POST" action="/cadastro_cliente">
+                    <h3 class="text-center mb-4">Cadastro de Cliente</h3>
+
+                    <div class="form-group">
+                        <label for="nome_cliente">Nome</label>
+                        <input type="text" class="form-control" id="nome_cliente" name="nome_cliente" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email_cliente">Email</label>
+                        <input type="email" class="form-control" id="email_cliente" name="email_cliente" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link para os scripts do Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

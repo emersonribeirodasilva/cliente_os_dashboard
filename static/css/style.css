@@ -1,0 +1,37 @@
+/* Estilo de fundo com animação */
+body {
+    background: linear-gradient(45deg, #6a11cb, #2575fc);
+    background-size: 400% 400%;
+    animation: gradientAnimation 10s ease infinite;
+}
+
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Customizando o botão */
+.btn-primary, .btn-success {
+    font-size: 16px;
+    padding: 12px 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.card {
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Títulos e textos */
+h2 {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+/* Animação de foco nos inputs */
+input:focus {
+    border-color: #2575fc;
+    box-shadow: 0 0 5px rgba(37, 117, 252, 0.5);
+}

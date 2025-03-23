@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acompanhamento de OS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Acompanhamento de Ordens de Serviço</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID da OS</th>
+                <th>Cliente</th>
+                <th>Equipamento</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Exibir os dados das OSs cadastradas -->
+            <tr>
+                <td>1</td>
+                <td>Cliente 1</td>
+                <td>Equipamento 1</td>
+                <td>Em andamento</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Cliente 2</td>
+                <td>Equipamento 2</td>
+                <td>Finalizado</td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <a href="/">Voltar para a Página Inicial</a>
+</body>
+</html>
