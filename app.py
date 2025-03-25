@@ -22,15 +22,11 @@ def login():
         password = request.form['password']
         tipo = request.form['tipo']  # Novo campo para selecionar o perfil
 
-
-        
-
         cur = mysql.connection.cursor()
         cur.execute("USE cliente_os")  # 🔥 Adicionando isso antes da primeira query
         cur.execute("SELECT id, username, password, tipo FROM usuarios WHERE username = %s", [username])       
         user = cur.fetchone()
         cur.close()
-        
 
         if user and check_password_hash(user['password'], password):  # Corrigido para DictCursor
             session['user_id'] = user['id']
@@ -77,22 +73,68 @@ def cadastro_usuario():
 
     return render_template('cadastro_usuario.html')
 
-# 🔍 Outras rotas
-@app.route('/cadastro_os')
+# 📌 Cadastro de Cliente
+@app.route('/cadastro_cliente', methods=['GET', 'POST'])
+def cadastro_cliente():
+    if request.method == 'POST':
+        nome_cliente = request.form['nome_cliente']
+        endereco_cliente = request.form['endereco_cliente']
+        email_cliente = request.form['email_cliente']
+        telefone_cliente = request.form['telefone_cliente']
+        cpf_cliente = request.form['cpf_cliente']
+
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO clientes (nome, endereco, email, telefone,cpf) VALUES (%s, %s, %s, %s)", 
+                    (nome_cliente, endereco_cliente, email_cliente, telefone_cliente,cpf_cliente))
+        mysql.connection.commit()
+        cur.close()
+
+        return redirect(url_for('suporte_dashboard'))
+
+    return render_template('cadastro_cliente.html')
+
+# 📌 Cadastro de Equipamento
+@app.route('/cadastro_equipamento', methods=['GET', 'POST'])
+def cadastro_equipamento():
+    if request.method == 'POST':
+        nome_equipamento = request.form['nome']
+        modelo_equipamento = request.form['modelo']
+        serie_equipamento = request.form['serie']
+        cliente_id = request.form['cliente_id']  # Relacionamento com cliente
+
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO equipamentos (nome, modelo, serie, cliente_id) VALUES (%s, %s, %s, %s)", 
+                    (nome_equipamento, modelo_equipamento, serie_equipamento, cliente_id))
+        mysql.connection.commit()
+        cur.close()
+
+        return redirect(url_for('suporte_dashboard'))
+
+    return render_template('cadastro_equipamento.html')
+
+# 📌 Cadastro de Ordem de Serviço (O.S.)
+@app.route('/cadastro_os', methods=['GET', 'POST'])
 def cadastro_os():
+    if request.method == 'POST':
+        cliente_id = request.form['cliente_id']
+        equipamento_id = request.form['equipamento_id']
+        descricao = request.form['descricao']
+        status = request.form['status']
+
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO ordens_servico (cliente_id, equipamento_id, descricao, status) VALUES (%s, %s, %s, %s)", 
+                    (cliente_id, equipamento_id, descricao, status))
+        mysql.connection.commit()
+        cur.close()
+
+        return redirect(url_for('suporte_dashboard'))
+
     return render_template('cadastro_os.html')
 
+# 🔍 Outras rotas
 @app.route('/suporte_dashboard')
 def suporte_dashboard():
     return render_template('suporte_dashboard.html')  # Tela do suporte com botões
-
-@app.route('/cadastro_cliente')
-def cadastro_cliente():
-    return render_template('cadastro_cliente.html')
-
-@app.route('/cadastro_equipamento')
-def cadastro_equipamento():
-    return render_template('cadastro_equipamento.html')
 
 @app.route('/acompanhamento_os')
 def acompanhamento_os():

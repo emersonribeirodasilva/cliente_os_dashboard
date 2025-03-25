@@ -4,25 +4,220 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Estilos gerais */
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #FF5722;
+            --hover-color: #45a049;
+            --active-color: #388e3c;
+            --text-color: #333;
+            --card-bg: #fff;
+            --table-header-bg: #f1f1f1;
+        }
+
+        body {
+            background: url("{{ url_for('static', filename='img/fundo.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Arial', sans-serif;
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        /* Cartões de informações */
+        .card-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 30%;
+            text-align: center;
+        }
+
+        .card h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        /* Tabela */
+        .table-container {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+
+        th {
+            background-color: var(--table-header-bg);
+        }
+
+        /* Gráfico */
+        .chart-container {
+            width: 100%;
+            height: 300px;
+            margin-top: 30px;
+        }
+
+        /* Botões */
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--hover-color);
+        }
+
+        /* Estilo de texto centralizado */
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-3 {
+            margin-top: 1rem;
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>Dashboard</h1>
-    <div>
-        <h2>Estatísticas</h2>
-        <p>Total de Clientes: 100</p>
-        <p>Total de Equipamentos: 150</p>
-        <p>Total de Ordens de Serviço: 50</p>
+    <div class="container">
+        <h1>Dashboard</h1>
+
+        <!-- Cartões de informações -->
+        <div class="card-container">
+            <div class="card">
+                <h3>Total de Clientes</h3>
+                <p>100</p>
+            </div>
+            <div class="card">
+                <h3>Total de Equipamentos</h3>
+                <p>150</p>
+            </div>
+            <div class="card">
+                <h3>Total de Ordens de Serviço</h3>
+                <p>50</p>
+            </div>
+        </div>
+
+        <!-- Gráfico de andamento das O.S -->
+        <div class="chart-container">
+            <canvas id="osStatusChart"></canvas>
+        </div>
+
+        <!-- Ordens de Serviço Recentes -->
+        <div class="table-container">
+            <h2>Ordens de Serviço Recentes</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID da OS</th>
+                        <th>Cliente</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Cliente 1</td>
+                        <td>Em andamento</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Cliente 2</td>
+                        <td>Finalizado</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Cliente 3</td>
+                        <td>Aberto</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <button type="button" class="btn btn-secondary btn-block" onclick="window.history.back();">Voltar</button>
     </div>
-    <div>
-        <h2>Ordens de Serviço Recentes</h2>
-        <ul>
-            <li>OS #1 - Cliente 1 - Em andamento</li>
-            <li>OS #2 - Cliente 2 - Finalizado</li>
-            <li>OS #3 - Cliente 3 - Aberto</li>
-        </ul>
-    </div>
-    <br>
-    <a href="/">Voltar para a Página Inicial</a>
+
+    <script>
+        // Gráfico de Status das Ordens de Serviço
+        const ctx = document.getElementById('osStatusChart').getContext('2d');
+        const osStatusChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Em andamento', 'Finalizado', 'Abertos'], // Status das O.S
+                datasets: [{
+                    label: 'Status das O.S',
+                    data: [25, 15, 10], // Quantidade de O.S por status
+                    backgroundColor: ['#4CAF50', '#FF5722', '#FFC107'],
+                    borderColor: ['#388e3c', '#d32f2f', '#fbc02d'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw + ' O.S';
+                            }
+                        }
+                    }
+                }
+            }});
+    </script>
 </body>
 </html>

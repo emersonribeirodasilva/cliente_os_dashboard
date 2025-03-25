@@ -5,28 +5,37 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suporte Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <style>
+        body {
+            background: url("{{ url_for('static', filename='img/painel manutecao.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+      </style>  
+
 </head>
-<body>
-    <div class="container">
-        <h2>Bem-vindo ao painel de Suporte</h2>
-        <div class="button-container">
-            <a href="{{ url_for('cadastro_cliente') }}" class="btn-link">
-                <button class="btn-primary">Cadastrar Cliente</button>
-            </a>
-            <a href="{{ url_for('cadastro_equipamento') }}" class="btn-link">
-                <button class="btn-primary">Cadastrar Equipamento</button>
-            </a>
-            <a href="{{ url_for('cadastro_os') }}" class="btn-link">
-                <button class="btn-primary">Cadastrar OS</button>
-            </a>
-            <a href="{{ url_for('acompanhamento_os') }}" class="btn-link">
-                <button class="btn-primary">Acompanhar OS</button>
-            </a>
-            <a href="{{ url_for('dashboard') }}" class="btn-link">
-                <button class="btn-primary">Dashboard</button>
-            </a>
+<body class="dashboard-bg d-flex justify-content-center align-items-center min-vh-100">
+    <div class="container text-center p-5" style="background: rgba(255, 255, 255, 0.9); border-radius: 15px;">
+        <h2 class="mb-4">Bem-vindo ao Painel de Suporte</h2>
+        <div class="d-flex flex-column align-items-center gap-4">
+            <a href="{{ url_for('cadastro_cliente') }}" class="btn btn-primary btn-lg w-100 mb-3">Cadastrar Cliente</a>
+            <a href="{{ url_for('cadastro_equipamento') }}" class="btn btn-primary btn-lg w-100 mb-3">Cadastrar Equipamento</a>
+            <a href="{{ url_for('cadastro_os') }}" class="btn btn-primary btn-lg w-100 mb-3">Cadastrar O.S</a>
+            <a href="{{ url_for('acompanhamento_os') }}" class="btn btn-primary btn-lg w-100 mb-3">Acompanhar O.S</a>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg w-100 mb-3">Dashboard</a>
         </div>
+        <button type="button" class="btn btn-secondary btn-block" onclick="window.history.back();">Voltar</button>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

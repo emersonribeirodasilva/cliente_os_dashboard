@@ -4,24 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Equipamento</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1>Cadastro de Equipamento</h1>
-    <form action="/cadastro_equipamento" method="POST">
-        <label for="cliente_id">Cliente:</label>
-        <select id="cliente_id" name="cliente_id" required>
-            <!-- Aqui você pode carregar dinamicamente os clientes cadastrados -->
-            <option value="1">Cliente 1</option>
-            <option value="2">Cliente 2</option>
-        </select><br><br>
+    
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form method="POST" action="/cadastro_equipamento">
+                    <h3 class="text-center mb-4">Cadastro de Equipamento</h3>
 
-        <label for="descricao">Descrição do Equipamento:</label>
-        <textarea id="descricao" name="descricao" required></textarea><br><br>
+                    <div class="form-group">
+                        <label for="modelo">Modelo</label>
+                        <input type="text" class="form-control" id="modelo" name="modelo" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="marca">Marca</label>
+                        <input type="text" class="form-control" id="marca" name="marca" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="data_fabricacao">Data de Fabricação</label>
+                        <input type="date" class="form-control" id="data_fabricacao" name="data_fabricacao" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="situacao">Situação</label>
+                        <select class="form-control" id="situacao" name="situacao" required>
+                            <option value="Ativo">Ativo</option>
+                            <option value="Inativo">Inativo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="descricao">Descrição do Equipamento</label>
+                        <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block">Cadastrar Equipamento</button>
+                    <button type="button" class="btn btn-secondary btn-block" onclick="window.history.back();">Voltar</button>
+                </form>
+            </div>
+        </div>
+    </div>
 
-        <button type="submit">Cadastrar Equipamento</button>
-    </form>
-    <br>
-    <a href="/">Voltar para a Página Inicial</a>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

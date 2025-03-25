@@ -5,46 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acompanhamento de OS</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Acompanhamento de Ordens de Serviço</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>ID da OS</th>
-                <th>Cliente</th>
-                <th>Equipamento</th>
-                <th>Status</th>
-                <th>Ações</th> <!-- Nova coluna para os botões -->
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Exibir os dados das OSs cadastradas -->
-            <tr>
-                <td>1</td>
-                <td>Cliente 1</td>
-                <td>Equipamento 1</td>
-                <td>Em andamento</td>
-                <td class="action-buttons">
-                    <button>EDITAR</button>
-                    <button>EXCLUIR</button>
-                    <button>FINALIZAR</button>
-                </td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Cliente 2</td>
-                <td>Equipamento 2</td>
-                <td>Finalizado</td>
-                <td class="action-buttons">
-                    <button>EDITAR</button>
-                    <button>EXCLUIR</button>
-                    <button>FINALIZAR</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <br>
-    <a href="/">Voltar para a Página Inicial</a>
+    <div class="container">
+        <h1>Acompanhamento de Ordens de Serviço</h1>
+        
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID da OS</th>
+                        <th>Cliente</th>
+                        <th>Equipamento</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Exibir os dados das OSs cadastradas -->
+                    <tr>
+                        <td>1</td>
+                        <td>Cliente 1</td>
+                        <td>Equipamento 1</td>
+                        <td>Em andamento</td>
+                        <td class="action-buttons">
+                            <button class="btn btn-secondary">EDITAR</button>
+                            <button class="btn btn-danger">EXCLUIR</button>
+                            <button class="btn btn-success">FINALIZAR</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Cliente 2</td>
+                        <td>Equipamento 2</td>
+                        <td>Finalizado</td>
+                        <td class="action-buttons">
+                            <button class="btn btn-secondary">EDITAR</button>
+                            <button class="btn btn-danger">EXCLUIR</button>
+                            <button class="btn btn-success">FINALIZAR</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <button type="button" class="btn btn-secondary btn-block" onclick="window.history.back();">Voltar</button>
+         
+    </div>
+
+    <!-- Scripts do Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

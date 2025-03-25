@@ -1,133 +1,123 @@
-/* Estilo de fundo com animação */
+/* 🎨 Definição de variáveis para reutilização */
+:root {
+    --primary-color: #007bff;
+    --primary-hover: #0056b3;
+    --text-color: #333;
+    --background-opacity: rgba(255, 255, 255, 0.95);
+    --shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+    --border-radius: 20px;
+    --btn-radius: 50px;
+    --transition-speed: 0.3s ease;
+}
+
+/* 🌍 Estilização global do body */
 body {
-    background: linear-gradient(45deg, #dfe6e9, #b2bec3); /* Cores suaves de cinza */
-    background-size: 400% 400%;
-    animation: gradientAnimation 12s ease infinite;
-    font-family: 'Arial', sans-serif;
-    color: #2d3436; /* Texto principal mais escuro para contraste */
+    background: url("{{ url_for('static', filename='img/painel_manutencao.jpg') }}") no-repeat center center fixed;
+    background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Para ocupar toda a altura da tela */
+    height: 100vh;
     margin: 0;
-}
-
-@keyframes gradientAnimation {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* Títulos e textos */
-h2 {
     font-family: 'Arial', sans-serif;
-    color: #2d3436; /* Cor do título mais suave */
-    font-weight: 600;
-    font-size: 24px;
+}
+
+/* 📦 Container principal */
+.container {
+    background: var(--background-opacity);
+    padding: 4rem 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    text-align: center;
+    width: 100%;
+    max-width: 800px;
+}
+
+/* 🏷️ Título */
+h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--text-color);
     margin-bottom: 20px;
 }
 
-/* Estilo para o container de navegação dos botões */
-.container {
-    text-align: center;
-    width: 100%;
-    max-width: 800px; /* Limita a largura para o conteúdo não ficar muito largo */
-}
-
-/* Estilo para o container de botões */
+/* 🔘 Container dos botões */
 .button-container {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
     gap: 15px;
     margin-top: 20px;
 }
 
-/* Customizando o botão */
-button {
-    font-size: 16px;
-    padding: 12px 20px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border-radius: 25px; /* Bordas arredondadas */
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    background-color: #b2bec3; /* Cor de fundo suave */
-    color: #fff;
-    margin: 10px;
-    width: 200px; /* Ajuste do tamanho dos botões */
-    min-width: 160px; /* Tamanho mínimo dos botões */
-}
-
-/* Efeito hover nos botões */
-button:hover {
-    background-color: #95a5a6; /* Cor mais escura ao passar o mouse */
-    transform: scale(1.05);
-}
-
-button:active {
-    background-color: #7f8c8d; /* Mais escuro quando pressionado */
-}
-
-/* Estilo da tabela */
-table {
+/* 🎯 Botões principais */
+.btn-primary {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-th, td {
-    padding: 12px;
-    text-align: left;
-    border: 1px solid #dfe6e9; /* Borda cinza clara */
-    font-size: 16px;
-}
-
-th {
-    background-color: #dfe6e9; /* Cabeçalhos com cor leve de cinza */
-}
-
-/* Estilo da célula de ações */
-td.action-buttons {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    justify-items: center;
-}
-
-/* Estilo dos botões dentro da tabela */
-td button {
-    padding: 10px 15px;
-    background-color: #dfe6e9; /* Cinza claro */
-    color: #2d3436; /* Texto escuro */
-    font-size: 14px;
-    border-radius: 5px;
-    transition: background-color 0.3s, transform 0.2s ease;
+    padding: 15px;
+    font-size: 20px;
+    border-radius: var(--btn-radius);
     border: none;
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color var(--transition-speed), transform 0.2s ease;
 }
 
-/* Efeito hover nos botões dentro da tabela */
-td button:hover {
-    background-color: #b2bec3; /* Cor de fundo mais escura no hover */
+.btn-primary:hover {
+    background-color: var(--primary-hover);
     transform: scale(1.05);
 }
 
-td button:active {
-    background-color: #95a5a6; /* Mais escuro quando pressionado */
+/* 🔗 Ajuste para os links */
+.btn-link {
+    text-decoration: none;
+    width: 100%;
 }
 
-/* Estilo para o card */
-.card {
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
-    background-color: white;
-    padding: 20px;
+/* 🔙 Botão de voltar */
+.voltar {
+    display: inline-block;
     margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color var(--transition-speed);
 }
 
-/* Animação de foco nos inputs */
-input:focus {
-    border-color: #95a5a6; /* Cinza claro no foco */
-    box-shadow: 0 0 8px rgba(149, 165, 166, 0.5); /* Suave sombra cinza */
+.voltar:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+/* 📱 Responsividade */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 3rem 1.5rem;
+    }
+    
+    .btn-primary {
+        font-size: 18px;
+        padding: 12px;
+    }
+    
+    h2 {
+        font-size: 24px;
+    }
+}
+body {
+    background: url("{{ url_for('static', filename='img/fundo_solar.png') }}") no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    color: #2d3436;
+}
+/* Estilo para o fundo */
+.dashboard-bg {
+    background: url('{{ url_for("static", filename="img/painel manutecao.jpg") }}') no-repeat center center fixed;
+    background-size: cover;
 }
