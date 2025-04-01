@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suporte Dashboard</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">    
     <style>
         body {
             background: url("{{ url_for('static', filename='img/painel manutecao.jpg') }}") no-repeat center center fixed;
@@ -29,6 +28,7 @@
             <a href="{{ url_for('cadastro_equipamento') }}" class="btn btn-primary btn-lg w-100 mb-3">Cadastrar Equipamento</a>
             <a href="{{ url_for('cadastro_os') }}" class="btn btn-primary btn-lg w-100 mb-3">Cadastrar O.S</a>
             <a href="{{ url_for('acompanhamento_os') }}" class="btn btn-primary btn-lg w-100 mb-3">Acompanhar O.S</a>
+            <a href="{{ url_for('acompanhamento_cliente') }}" class="btn btn-primary btn-lg w-100 mb-3">Acompanhar Cliente</a>
             <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg w-100 mb-3">Dashboard</a>
         </div>
         <button type="button" class="btn btn-secondary btn-block" onclick="window.history.back();">Voltar</button>

@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Estilos gerais */
         :root {
             --primary-color: #4CAF50;
             --secondary-color: #FF5722;
@@ -45,7 +45,6 @@
             margin-bottom: 20px;
         }
 
-        /* Cartões de informações */
         .card-container {
             display: flex;
             justify-content: space-between;
@@ -72,7 +71,6 @@
             font-weight: bold;
         }
 
-        /* Tabela */
         .table-container {
             width: 100%;
             margin-top: 20px;
@@ -95,120 +93,139 @@
             background-color: var(--table-header-bg);
         }
 
-        /* Gráfico */
-        .chart-container {
-            width: 100%;
-            height: 300px;
-            margin-top: 30px;
+        .chart-weather-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 20px;
         }
 
-        /* Botões */
+        .chart-container {
+            width:40%;
+        }
+
+        .weather-card {
+            width: 35%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .weather-card img {
+            width: 80px;
+        }
+
         .btn-secondary {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
             background-color: var(--secondary-color);
             color: white;
-            padding: 12px 20px;
             border-radius: 5px;
-            font-size: 16px;
             text-align: center;
-            transition: background-color 0.3s;
+            cursor: pointer;
+            transition: background 0.3s;
         }
 
         .btn-secondary:hover {
-            background-color: var(--hover-color);
+            background: #E64A19;
         }
 
-        /* Estilo de texto centralizado */
-        .text-center {
+        .input-container {
+            margin-top: 20px;
             text-align: center;
         }
 
-        .mt-3 {
-            margin-top: 1rem;
+        .input-container input {
+            padding: 10px;
+            font-size: 16px;
+            width: 50%;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .input-container button {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .input-container button:hover {
+            background-color: var(--hover-color);
         }
     </style>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
         <h1>Dashboard</h1>
-
-        <!-- Cartões de informações -->
+        
         <div class="card-container">
             <div class="card">
                 <h3>Total de Clientes</h3>
-                <p>100</p>
+                <p>{{ total_clientes }}</p>
             </div>
             <div class="card">
                 <h3>Total de Equipamentos</h3>
-                <p>150</p>
+                <p>{{ total_equipamentos }}</p>
             </div>
             <div class="card">
-                <h3>Total de Ordens de Serviço</h3>
-                <p>50</p>
+                <h3>Total de O.S</h3>
+                <p>{{ total_os }}</p>
+            </div>
+        </div>
+        
+
+        <div class="chart-weather-container">
+            <div class="chart-container">
+                <canvas id="osStatusChart"></canvas>
+            </div>
+
+            <div class="weather-card" id="weather-card">
+                <h3>Clima Atual</h3>
+                <div id="weather-icon" style="font-size: 48px;">
+                    {% if weather_data.error %}
+                        🌍 (Erro ao carregar clima)
+                    {% else %}
+                        <img src="http://openweathermap.org/img/wn/{{ weather_data.icon }}.png" alt="Clima" />
+                    {% endif %}
+                </div>
+                <p><strong>Temperatura:</strong> {% if weather_data.temperature %}{{ weather_data.temperature }}°C{% else %}--°C{% endif %}</p>
+                <p><strong>Precipitação:</strong> -- mm</p>
+                <p><strong>Velocidade do Vento:</strong> {% if weather_data.windspeed %}{{ weather_data.windspeed }} m/s{% else %}-- m/s{% endif %}</p>
+                <p><strong>Horário:</strong> {% if weather_data.time %}{{ weather_data.time }}{% else %}--{% endif %}</p>
             </div>
         </div>
 
-        <!-- Gráfico de andamento das O.S -->
-        <div class="chart-container">
-            <canvas id="osStatusChart"></canvas>
+        <div class="input-container">
+            <label for="city-id">Insira o ID da Cidade: </label>
+            <input type="text" id="city-id" placeholder="Ex: 524901" />
+            <button onclick="fetchWeather()">Buscar Clima</button>
         </div>
 
-        <!-- Ordens de Serviço Recentes -->
-        <div class="table-container">
-            <h2>Ordens de Serviço Recentes</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>ID da OS</th>
-                        <th>Cliente</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Cliente 1</td>
-                        <td>Em andamento</td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Cliente 2</td>
-                        <td>Finalizado</td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Cliente 3</td>
-                        <td>Aberto</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        
-        <button type="button" class="btn btn-secondary btn-block" onclick="window.history.back();">Voltar</button>
+        <button class="btn-secondary" onclick="window.history.back();">Voltar</button>
     </div>
 
     <script>
         // Gráfico de Status das Ordens de Serviço
         const ctx = document.getElementById('osStatusChart').getContext('2d');
-        const osStatusChart = new Chart(ctx, {
+        new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: ['Em andamento', 'Finalizado', 'Abertos'], // Status das O.S
+                labels: ['Em andamento', 'Finalizado', 'Abertos'],
                 datasets: [{
-                    label: 'Status das O.S',
-                    data: [25, 15, 10], // Quantidade de O.S por status
-                    backgroundColor: ['#4CAF50', '#FF5722', '#FFC107'],
-                    borderColor: ['#388e3c', '#d32f2f', '#fbc02d'],
-                    borderWidth: 1
+                    data: [25, 15, 10],
+                    backgroundColor: ['#4CAF50', '#FF5722', '#FFC107']
                 }]
             },
             options: {
                 responsive: true,
                 plugins: {
-                    legend: {
-                        position: 'top',
-                    },
+                    legend: { position: 'top' },
                     tooltip: {
                         callbacks: {
                             label: function(tooltipItem) {
@@ -217,7 +234,43 @@
                         }
                     }
                 }
-            }});
+            }
+        });
+
+        async function fetchWeather() {
+            const cityId = document.getElementById('city-id').value; // Pega o ID da cidade inserido
+            if (!cityId) {
+                alert('Por favor, insira o ID da cidade.');
+                return;
+            }
+
+            try {
+                // Fazendo uma requisição ao Flask com o ID da cidade
+                const response = await fetch(`/weather/${cityId}`);
+                const data = await response.json();
+
+                if (data.temperature) {
+                    document.getElementById('temperature').textContent = `${data.temperature}°C`;
+                } else {
+                    document.getElementById('temperature').textContent = "Dados de temperatura não encontrados";
+                }
+
+                const description = data?.description || "Sem descrição";
+                document.getElementById('description').textContent = description;
+
+                // Definindo o ícone do clima com base no código retornado pela API
+                const weatherIconCode = data?.icon || "01d"; // Padrão "01d" se o ícone não for encontrado
+                const weatherIconUrl = `http://openweathermap.org/img/wn/${weatherIconCode}.png`;
+                
+                // Exibe o ícone do clima na página
+                document.getElementById('weather-icon').innerHTML = `<img src="${weatherIconUrl}" alt="Clima" />`;
+
+            } catch (error) {
+                console.error('Erro ao buscar clima:', error);
+                document.getElementById('description').textContent = "Erro ao carregar dados";
+                document.getElementById('weather-icon').textContent = "🌍"; // Ícone de erro
+            }
+        }
     </script>
 </body>
 </html>

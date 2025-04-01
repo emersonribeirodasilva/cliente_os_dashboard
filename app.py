@@ -1,18 +1,85 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+import requests
+from flask import Flask, jsonify, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from database.db import init_db, mysql
 
+
 app = Flask(__name__)
-app.secret_key = '1111122222'  # Chave segura para sessão
+app.secret_key = '1111122222'
 
 init_db(app)
 
-# Configurações do banco de dados
-app.config['MYSQL_HOST'] = '127.0.0.1'  # Ou o IP do seu servidor MySQL
-app.config['MYSQL_USER'] = 'root'  # Seu usuário MySQL
-app.config['MYSQL_PASSWORD'] = ''  # Sua senha do MySQL, se houver
-app.config['MYSQL_DB'] = 'cliente_os'  # Nome do seu banco de dados
-app.config['MYSQL_CURSORCLASS'] = 'DictCursor'  # Para retornar resultados como dicionário
+# Configuração do banco de dados
+app.config['MYSQL_HOST'] = '127.0.0.1'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'cliente_os'
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+
+@app.route('/weather/<int:id>', methods=['GET', 'POST'])
+def get_weather():
+    API_KEY = "9e17be5dd05622ea023dd42a7c93b64a"
+    city_id = 524901  # Substitua com o ID da cidade ou passe como variável
+
+    url = f"http://api.openweathermap.org/data/2.5/forecast?id={city_id}&appid={API_KEY}&units=metric&lang=pt"
+
+    try:
+        response = requests.get(url)
+        data = response.json()
+
+        weather_data = {
+            "description": data["list"][0]["weather"][0]["description"],
+            "icon": data["list"][0]["weather"][0]["icon"],
+            "temperature": data["list"][0]["main"]["temp"],
+            "windspeed": data["list"][0]["wind"]["speed"],
+            "time": data["list"][0]["dt_txt"]
+        }
+
+        return weather_data
+
+    except requests.exceptions.RequestException as e:
+        print("Erro na requisição HTTP:", e)
+        return {"error": "Erro ao obter dados do clima"}
+    except Exception as e:
+        print("Erro inesperado:", e)
+        return {"error": "Erro inesperado"}
+
+@app.route('/dashboard')
+def dashboard():
+    cur = mysql.connection.cursor() # Retorna os resultados como dicionários
+    cur.execute("USE cliente_os")
+
+    # Obter o total de clientes
+    cur.execute('SELECT COUNT(*) AS total FROM clientes')  
+    total_clientes = cur.fetchone()["total"]  
+
+    # Obter o total de equipamentos
+    cur.execute('SELECT COUNT(*) AS total FROM equipamentos')
+    total_equipamentos = cur.fetchone()["total"]  
+
+    # Obter o total de ordens de serviço
+    cur.execute('SELECT COUNT(*) AS total FROM ordens_servico')
+    total_os = cur.fetchone()["total"]  
+    os_status = [25, 15, 10]  # Em andamento, Finalizado, Abertos
+    
+    # Obtendo os dados do clima
+    weather_data = get_weather()
+
+    # Exemplo de ordens de serviço recentes
+    ordens_servico = [
+        {"id": 1, "cliente": "Cliente 1", "status": "Em andamento"},
+        {"id": 2, "cliente": "Cliente 2", "status": "Finalizado"},
+        {"id": 3, "cliente": "Cliente 3", "status": "Abertos"},
+    ]
+
+    return render_template('dashboard.html', 
+                           total_equipamentos=total_equipamentos,
+                           total_os=total_os,
+                           os_status=os_status,
+                           total_clientes= total_clientes,
+                           weather_data=weather_data,
+                           ordens_servico=ordens_servico)
+
 
 # 🔐 Tela de Login
 @app.route('/', methods=['GET', 'POST'])
@@ -84,7 +151,7 @@ def cadastro_cliente():
         cpf_cliente = request.form['cpf_cliente']
 
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO clientes (nome, endereco, email, telefone,cpf) VALUES (%s, %s, %s, %s)", 
+        cur.execute("INSERT INTO clientes (nome, endereco, email, telefone,cpf) VALUES (%s, %s, %s, %s,%s)", 
                     (nome_cliente, endereco_cliente, email_cliente, telefone_cliente,cpf_cliente))
         mysql.connection.commit()
         cur.close()
@@ -97,14 +164,17 @@ def cadastro_cliente():
 @app.route('/cadastro_equipamento', methods=['GET', 'POST'])
 def cadastro_equipamento():
     if request.method == 'POST':
-        nome_equipamento = request.form['nome']
+        cliente_id =request.form['cliente_id'] # Está dando problema na constraint, tem que ajustar isso
+        descricao_equipamento = request.form['descricao']
         modelo_equipamento = request.form['modelo']
-        serie_equipamento = request.form['serie']
-        cliente_id = request.form['cliente_id']  # Relacionamento com cliente
+        marca_equipamento = request.form['marca']
+        data_fabricacao_eq = request.form['data_fabricacao'] 
+        situacao_equipamento = request.form['situacao']
+       
 
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO equipamentos (nome, modelo, serie, cliente_id) VALUES (%s, %s, %s, %s)", 
-                    (nome_equipamento, modelo_equipamento, serie_equipamento, cliente_id))
+        cur.execute("INSERT INTO equipamentos (cliente_id,descricao, modelo, marca, data_fabricacao,situacao) "
+        "VALUES (%s, %s, %s, %s,%s,%s)", (cliente_id,descricao_equipamento, modelo_equipamento, marca_equipamento, data_fabricacao_eq,situacao_equipamento))
         mysql.connection.commit()
         cur.close()
 
@@ -131,18 +201,45 @@ def cadastro_os():
 
     return render_template('cadastro_os.html')
 
+
 # 🔍 Outras rotas
 @app.route('/suporte_dashboard')
 def suporte_dashboard():
     return render_template('suporte_dashboard.html')  # Tela do suporte com botões
 
-@app.route('/acompanhamento_os')
+@app.route('/acompanhamento_os', methods=['GET'])
 def acompanhamento_os():
-    return render_template('acompanhamento_os.html')
+    # Criando o cursor
+    cur = mysql.connection.cursor()
 
-@app.route('/dashboard')
-def dashboard():
-    return render_template('dashboard.html')
+    # Consultando as ordens de serviço
+    cur.execute("SELECT id, cliente_id, equipamento_id,descricao,status FROM ordens_servico")  # Remover a vírgula extra após 'nome'
+    ordens_servico = cur.fetchall()
+
+    # Fechando o cursor
+    cur.close()
+
+    # Passando os dados para o template HTML
+    return render_template('acompanhamento_os.html', ordens_servico=ordens_servico)
+
+
+
+@app.route('/acompanhamento_cliente', methods=['GET'])
+def acompanhamento_cliente():
+    # Criando o cursor
+    cur = mysql.connection.cursor()
+
+    # Consultando as ordens de serviço
+    cur.execute("SELECT id, nome, email,telefone,endereco,cpf FROM clientes")  # Remover a vírgula extra após 'nome'
+    clientes = cur.fetchall()
+
+    # Fechando o cursor
+    cur.close()
+
+    # Passando os dados para o template HTML
+    return render_template('acompanhamento_cliente.html', clientes=clientes)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro Cliente</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Lista de Clientes</h1>
+        
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>NOME</th>
+                        <th>ID DO EQUIPAMENTO</th>
+                        <th>EMAIL</th>
+                        <th>TELEFONE</th>
+                        <th>ENDERECO</th>
+                        <th>CPF</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Exibir os dados das OSs cadastradas -->
+                    {% for Cliente in clientes %}
+                    <tr>
+                        <td>{{ Cliente["id"] }}</td>
+                        <td>{{ Cliente["nome"] }}</td>
+                        <td>{{ Cliente["email"] }}</td>
+                        <td>{{ Cliente["telefone"] }}</td>
+                        <td>{{ Cliente["endereco"] }}</td>
+                        <td>{{ Cliente["cpf"] }}</td>
+
+                        <td class="action-buttons">
+                            <button class="btn btn-secondary">EDITAR</button>
+                            <button class="btn btn-danger">EXCLUIR</button>
+                            <button class="btn btn-success">FINALIZAR</button>
+                        </td>
+                              
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <button type="button" class="btn btn-secondary btn-block" onclick="window.history.back();">Voltar</button>
+    </div>
+
+    <!-- Scripts do Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

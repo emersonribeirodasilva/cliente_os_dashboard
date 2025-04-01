@@ -14,24 +14,24 @@
         <form action="/cadastro_os" method="POST">
             <div class="form-group">
                 <label for="cliente_id">Cliente:</label>
-                <select id="cliente_id" name="cliente_id" required class="form-control">
-                    <option value="1">Cliente 1</option>
-                    <option value="2">Cliente 2</option>
-                </select>
+                <textarea id="cliente_id" name="cliente_id" required class="form-control"></textarea>
             </div>
 
             <div class="form-group">
                 <label for="equipamento_id">Equipamento:</label>
-                <select id="equipamento_id" name="equipamento_id" required class="form-control">
-                    <option value="1">Equipamento 1</option>
-                    <option value="2">Equipamento 2</option>
-                </select>
+                <textarea id="equipamento_id" name="equipamento_id" required class="form-control"></textarea>
+
             </div>
 
             <div class="form-group">
                 <label for="descricao">Descrição da OS:</label>
                 <textarea id="descricao" name="descricao" required class="form-control"></textarea>
             </div>
+            <div class="form-group">
+                <label for="status">Status</label>
+                <textarea id="status" name="status" required class="form-control"></textarea>
+            </div>
+
 
             <button type="submit" class="btn btn-primary btn-block">Cadastrar OS</button>
             <button type="button" class="btn btn-secondary btn-block" onclick="window.history.back();">Voltar</button>

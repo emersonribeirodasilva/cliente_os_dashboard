@@ -15,43 +15,35 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>ID da OS</th>
-                        <th>Cliente</th>
-                        <th>Equipamento</th>
-                        <th>Status</th>
-                        <th>Ações</th>
+                        <th>ID</th>
+                        <th>ID DO CLIENTE</th>
+                        <th>ID DO EQUIPAMENTO</th>
+                        <th>DESCRIÇÃO</th>
+                        <th>STATUS</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
                     <!-- Exibir os dados das OSs cadastradas -->
+                    {% for ordem in ordens_servico %}
                     <tr>
-                        <td>1</td>
-                        <td>Cliente 1</td>
-                        <td>Equipamento 1</td>
-                        <td>Em andamento</td>
+                        <td>{{ ordem["id"] }}</td>
+                        <td>{{ ordem["cliente_id"] }}</td>
+                        <td>{{ ordem["equipamento_id"] }}</td>
+                        <td>{{ ordem["descricao"] }}</td>
+                        <td>{{ ordem["status"] }}</td>
                         <td class="action-buttons">
                             <button class="btn btn-secondary">EDITAR</button>
                             <button class="btn btn-danger">EXCLUIR</button>
                             <button class="btn btn-success">FINALIZAR</button>
                         </td>
                     </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Cliente 2</td>
-                        <td>Equipamento 2</td>
-                        <td>Finalizado</td>
-                        <td class="action-buttons">
-                            <button class="btn btn-secondary">EDITAR</button>
-                            <button class="btn btn-danger">EXCLUIR</button>
-                            <button class="btn btn-success">FINALIZAR</button>
-                        </td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
 
         <button type="button" class="btn btn-secondary btn-block" onclick="window.history.back();">Voltar</button>
-         
     </div>
 
     <!-- Scripts do Bootstrap -->
