@@ -8,10 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <header>
-        <h1>Sistema de Gestão de OS</h1>
-    </header>
-    
+       
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -45,7 +42,7 @@
                     <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
 
                     <div class="text-center mt-3">
-                        <a href="/" class="btn btn-secondary">Voltar</a>
+                        <button class="btn-secondary" onclick="window.history.back();">Voltar</button>
                     </div>
                 </form>
             </div>

@@ -16,37 +16,49 @@ app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'cliente_os'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
-@app.route('/weather/<int:id>', methods=['GET', 'POST'])
-def get_weather():
-    API_KEY = "9e17be5dd05622ea023dd42a7c93b64a"
-    city_id = 524901  # Substitua com o ID da cidade ou passe como variável
+API_KEY = "9e17be5dd05622ea023dd42a7c93b64a"
 
+@app.route('/weather/<int:city_id>', methods=['GET'])
+def get_weather(city_id):
+    API_KEY = "9e17be5dd05622ea023dd42a7c93b64a"
     url = f"http://api.openweathermap.org/data/2.5/forecast?id={city_id}&appid={API_KEY}&units=metric&lang=pt"
 
     try:
         response = requests.get(url)
+        response.raise_for_status()  # Levanta erro HTTP se houver falha
         data = response.json()
+
+        if "list" not in data or not data["list"]:
+            return {"error": "Dados do clima não disponíveis"}, 404
 
         weather_data = {
             "description": data["list"][0]["weather"][0]["description"],
             "icon": data["list"][0]["weather"][0]["icon"],
             "temperature": data["list"][0]["main"]["temp"],
             "windspeed": data["list"][0]["wind"]["speed"],
-            "time": data["list"][0]["dt_txt"]
+            "time": data["list"][0]["dt_txt"],
+            "city_name": data["city"]["name"]  # Adicionando o nome da cidade
         }
 
-        return weather_data
+        return weather_data  # Retorna os dados diretamente (não jsonify)
 
     except requests.exceptions.RequestException as e:
         print("Erro na requisição HTTP:", e)
-        return {"error": "Erro ao obter dados do clima"}
+        return {"error": "Erro ao obter dados do clima"}, 500
     except Exception as e:
         print("Erro inesperado:", e)
-        return {"error": "Erro inesperado"}
+        return {"error": "Erro inesperado"}, 500
 
-@app.route('/dashboard')
+@app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
-    cur = mysql.connection.cursor() # Retorna os resultados como dicionários
+    city_id = "5128581"  # ID padrão (Nova York)
+    
+    if request.method == 'POST':  # Verifica se o formulário foi enviado
+        city_id = request.form.get('city_id', city_id)  # Pega o ID do formulário, se existir
+
+    weather_data = get_weather(city_id)  # Obtém os dados do clima city_id para a função
+
+    cur = mysql.connection.cursor()  # Retorna os resultados como dicionários
     cur.execute("USE cliente_os")
 
     # Obter o total de clientes
@@ -61,10 +73,9 @@ def dashboard():
     cur.execute('SELECT COUNT(*) AS total FROM ordens_servico')
     total_os = cur.fetchone()["total"]  
     os_status = [25, 15, 10]  # Em andamento, Finalizado, Abertos
-    
-    # Obtendo os dados do clima
-    weather_data = get_weather()
 
+    # Obtendo os dados do clima
+    
     # Exemplo de ordens de serviço recentes
     ordens_servico = [
         {"id": 1, "cliente": "Cliente 1", "status": "Em andamento"},
@@ -77,8 +88,9 @@ def dashboard():
                            total_os=total_os,
                            os_status=os_status,
                            total_clientes= total_clientes,
-                           weather_data=weather_data,
+                           weather_data=weather_data,  # Passando diretamente os dados do clima
                            ordens_servico=ordens_servico)
+
 
 
 # 🔐 Tela de Login
@@ -164,19 +176,21 @@ def cadastro_cliente():
 @app.route('/cadastro_equipamento', methods=['GET', 'POST'])
 def cadastro_equipamento():
     if request.method == 'POST':
-        cliente_id =request.form['cliente_id'] # Está dando problema na constraint, tem que ajustar isso
-        descricao_equipamento = request.form['descricao']
         modelo_equipamento = request.form['modelo']
+        descricao_equipamento = request.form['descricao']       
         marca_equipamento = request.form['marca']
         data_fabricacao_eq = request.form['data_fabricacao'] 
-        situacao_equipamento = request.form['situacao']
+        status_equipamento = request.form['status']
        
 
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO equipamentos (cliente_id,descricao, modelo, marca, data_fabricacao,situacao) "
-        "VALUES (%s, %s, %s, %s,%s,%s)", (cliente_id,descricao_equipamento, modelo_equipamento, marca_equipamento, data_fabricacao_eq,situacao_equipamento))
+        cur.execute(
+             "INSERT INTO equipamentos (modelo, descricao, marca, data_fabricacao, status) VALUES (%s, %s, %s, %s, %s)", 
+             (modelo_equipamento, descricao_equipamento, marca_equipamento, data_fabricacao_eq, status_equipamento)
+              )
         mysql.connection.commit()
         cur.close()
+
 
         return redirect(url_for('suporte_dashboard'))
 

@@ -183,9 +183,9 @@
         <div class="chart-weather-container">
             <div class="chart-container">
                 <canvas id="osStatusChart"></canvas>
-            </div>
+        </div>
 
-            <div class="weather-card" id="weather-card">
+           <div class="weather-card" id="weather-card">
                 <h3>Clima Atual</h3>
                 <div id="weather-icon" style="font-size: 48px;">
                     {% if weather_data.error %}
@@ -194,18 +194,20 @@
                         <img src="http://openweathermap.org/img/wn/{{ weather_data.icon }}.png" alt="Clima" />
                     {% endif %}
                 </div>
+                <p><strong>Cidade:</strong> {% if weather_data.city_name %}{{ weather_data.city_name }}{% else %}--{% endif %}</p>
                 <p><strong>Temperatura:</strong> {% if weather_data.temperature %}{{ weather_data.temperature }}°C{% else %}--°C{% endif %}</p>
                 <p><strong>Precipitação:</strong> -- mm</p>
                 <p><strong>Velocidade do Vento:</strong> {% if weather_data.windspeed %}{{ weather_data.windspeed }} m/s{% else %}-- m/s{% endif %}</p>
                 <p><strong>Horário:</strong> {% if weather_data.time %}{{ weather_data.time }}{% else %}--{% endif %}</p>
+             </div>
             </div>
-        </div>
-
         <div class="input-container">
-            <label for="city-id">Insira o ID da Cidade: </label>
-            <input type="text" id="city-id" placeholder="Ex: 524901" />
+            <label for="city_id">Insira o ID da Cidade: </label>
+            <input type="text" id="city_id" placeholder="Ex: 524901" />
             <button onclick="fetchWeather()">Buscar Clima</button>
         </div>
+        <div id="weather-result"></div> <!-- Onde os dados do clima serão exibidos -->
+        
 
         <button class="btn-secondary" onclick="window.history.back();">Voltar</button>
     </div>
@@ -238,39 +240,38 @@
         });
 
         async function fetchWeather() {
-            const cityId = document.getElementById('city-id').value; // Pega o ID da cidade inserido
-            if (!cityId) {
-                alert('Por favor, insira o ID da cidade.');
+        const cityId = document.getElementById('city_id').value.trim(); // Pega o ID da cidade inserido
+        if (!cityId) {
+            alert('Por favor, insira o ID da cidade.');
+            return;
+        }
+
+        try {
+            // Fazendo uma requisição ao Flask com o ID da cidade
+            const response = await fetch(`/weather/${cityId}`);
+            const data = await response.json();
+
+            if (data.error) {
+                document.getElementById('weather-result').innerHTML = `<p style="color: red;">${data.error}</p>`;
                 return;
             }
 
-            try {
-                // Fazendo uma requisição ao Flask com o ID da cidade
-                const response = await fetch(`/weather/${cityId}`);
-                const data = await response.json();
-
-                if (data.temperature) {
-                    document.getElementById('temperature').textContent = `${data.temperature}°C`;
-                } else {
-                    document.getElementById('temperature').textContent = "Dados de temperatura não encontrados";
-                }
-
-                const description = data?.description || "Sem descrição";
-                document.getElementById('description').textContent = description;
-
-                // Definindo o ícone do clima com base no código retornado pela API
-                const weatherIconCode = data?.icon || "01d"; // Padrão "01d" se o ícone não for encontrado
-                const weatherIconUrl = `http://openweathermap.org/img/wn/${weatherIconCode}.png`;
-                
-                // Exibe o ícone do clima na página
-                document.getElementById('weather-icon').innerHTML = `<img src="${weatherIconUrl}" alt="Clima" />`;
-
-            } catch (error) {
-                console.error('Erro ao buscar clima:', error);
-                document.getElementById('description').textContent = "Erro ao carregar dados";
-                document.getElementById('weather-icon').textContent = "🌍"; // Ícone de erro
-            }
+            // Atualizando os dados no HTML
+            document.getElementById('weather-result').innerHTML = `
+                <h3>Clima Atual</h3>
+                <div id="weather-icon">
+                    <img src="http://openweathermap.org/img/wn/${data.icon}.png" alt="Ícone do Clima" />
+                </div>
+                <p><strong>Cidade:</strong> ${data.city_name}</p>
+                <p><strong>Temperatura:</strong> ${data.temperature}°C</p>
+                <p><strong>Descrição:</strong> ${data.description}</p>
+                <p><strong>Velocidade do Vento:</strong> ${data.windspeed} m/s</p>
+            `;
+        } catch (error) {
+            console.error('Erro ao buscar clima:', error);
+            document.getElementById('weather-result').innerHTML = `<p style="color: red;">Erro ao carregar os dados do clima.</p>`;
         }
+    }
     </script>
 </body>
 </html>

@@ -14,14 +14,9 @@
             <div class="col-md-6">
                 <form method="POST" action="/cadastro_equipamento">
                     <h3 class="text-center mb-4">Cadastro de Equipamento</h3>
-
+                    
                     <div class="form-group">
-                        <label for="cliente_id">Cliente</label>
-                        <input type="text" class="form-control" id="cliente_id" name="cliente_id" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="modelo">Modelo</label>
+                        <label for="modelo">Modelo do equipamento</label>
                         <input type="text" class="form-control" id="modelo" name="modelo" required>
                     </div>
                     
@@ -36,17 +31,19 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="situacao">Situação</label>
-                        <select class="form-control" id="situacao" name="situacao" required>
-                            <option value="Ativo">Ativo</option>
-                            <option value="Inativo">Inativo</option>
+                        <label for="descricao">Descrição do Equipamento</label>
+                        <textarea class="form-control" id="descricao" name="descricao" rows="4" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">Status da O.S</label>
+                        <select class="form-control" id="status" name="status" required>
+                            <option value="Ativo">ATIVO</option>
+                            <option value="Inativo">INATIVO</option>
                         </select>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="descricao">Descrição do Equipamento</label>
-                        <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
-                    </div>
+                  
                     
                     <button type="submit" class="btn btn-primary btn-block">Cadastrar Equipamento</button>
                     <button type="button" class="btn btn-secondary btn-block" onclick="window.history.back();">Voltar</button>
