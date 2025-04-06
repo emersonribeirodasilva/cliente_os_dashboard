@@ -6,158 +6,184 @@
     <title>Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            --primary-color: #4CAF50;
-            --secondary-color: #FF5722;
-            --hover-color: #45a049;
-            --active-color: #388e3c;
-            --text-color: #333;
-            --card-bg: #fff;
-            --table-header-bg: #f1f1f1;
-        }
+     :root {
+    --primary-color: #4CAF50;
+    --secondary-color: #FF5722;
+    --hover-color: #45a049;
+    --active-color: #388e3c;
+    --text-color: #333;
+    --card-bg: #fff;
+    --table-header-bg: #f1f1f1;
+}
 
-        body {
-            background: url("{{ url_for('static', filename='img/fundo.jpg') }}") no-repeat center center fixed;
-            background-size: cover;
-            font-family: 'Arial', sans-serif;
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-        }
+body {
+    background: url("{{ url_for('static', filename='img/fundo.jpg') }}") no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Arial', sans-serif;
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
 
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 2rem;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
 
-        h1 {
-            text-align: center;
-            font-size: 32px;
-            margin-bottom: 20px;
-        }
+h1 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
 
-        h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
+h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+}
 
-        .card-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
+.card-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 20px;
+}
 
-        .card {
-            background-color: var(--card-bg);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 30%;
-            text-align: center;
-        }
+.card {
+    background-color: var(--card-bg);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 30%;
+    text-align: center;
+}
 
-        .card h3 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
+.card h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
 
-        .card p {
-            font-size: 36px;
-            font-weight: bold;
-        }
+.card p {
+    font-size: 32px;
+    font-weight: bold;
+}
 
-        .table-container {
-            width: 100%;
-            margin-top: 20px;
-        }
+/* Área do gráfico e do clima */
+.chart-weather-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    
+}
 
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+.chart-container {
+    width: 40%; /* Ocupa mais espaço */
+    display: flex;
+    justify-content: center;
+}
 
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border: 1px solid #ddd;
-            font-size: 16px;
-        }
 
-        th {
-            background-color: var(--table-header-bg);
-        }
+#weather-icon {
+    display: flex;
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    width: 100%; /* Ocupa toda a largura do cartão */
+    margin-top: 10px;
+}
 
-        .chart-weather-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-top: 20px;
-        }
+#weather-icon img {
+    width: 50px;
+    height: auto;
+}
+/* Cartão do Clima menor */
+.weather-card {
+    width: 45%; /* Reduzi o tamanho */
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
 
-        .chart-container {
-            width:40%;
-        }
+.weather-card h3 {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
 
-        .weather-card {
-            width: 35%;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
+.weather-card p {
+    font-size: 15px;
+    margin: 5px 0;
+}
 
-        .weather-card img {
-            width: 80px;
-        }
+.weather-card img {
+    width: 40px;
+}
 
-        .btn-secondary {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: var(--secondary-color);
-            color: white;
-            border-radius: 5px;
-            text-align: center;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
+/* Ajuste para a caixa de entrada e botão */
+.input-container {
+    width: 100%;
+    margin-top: 8px;
+    text-align: center;
+}
+/* CAMPO DE PREENCHIMENTO*/
+.input-container input {
+    width: 85%;
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+/* BOTÃO BUSCA CLIMA */
+.input-container button {
+    width: 25%;
+    padding: 8px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 5px;
+}
+/* BOTÃO VOLTAR */
+.back-button {
+    width: 25%;
+    padding: 8px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 5px;
+ 
+}
 
-        .btn-secondary:hover {
-            background: #E64A19;
-        }
+.back-button:hover {
+    background-color: #0056b3; /* Azul mais escuro no hover */
+}
 
-        .input-container {
-            margin-top: 20px;
-            text-align: center;
-        }
 
-        .input-container input {
-            padding: 10px;
-            font-size: 16px;
-            width: 50%;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
+.input-container button:hover {
+    background-color: var(--hover-color);
 
-        .input-container button {
-            padding: 10px 20px;
-            background-color: var(--primary-color);
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
+}
 
-        .input-container button:hover {
-            background-color: var(--hover-color);
-        }
+/* Responsividade */
+@media (max-width: 768px) {
+    .chart-weather-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .chart-container,
+    .weather-card {
+        width: 90%;
+    }
+}
+
     </style>
 </head>
 <body>
@@ -185,42 +211,50 @@
                 <canvas id="osStatusChart"></canvas>
         </div>
 
-           <div class="weather-card" id="weather-card">
-                <h3>Clima Atual</h3>
-                <div id="weather-icon" style="font-size: 48px;">
-                    {% if weather_data.error %}
-                        🌍 (Erro ao carregar clima)
-                    {% else %}
-                        <img src="http://openweathermap.org/img/wn/{{ weather_data.icon }}.png" alt="Clima" />
-                    {% endif %}
-                </div>
-                <p><strong>Cidade:</strong> {% if weather_data.city_name %}{{ weather_data.city_name }}{% else %}--{% endif %}</p>
-                <p><strong>Temperatura:</strong> {% if weather_data.temperature %}{{ weather_data.temperature }}°C{% else %}--°C{% endif %}</p>
-                <p><strong>Precipitação:</strong> -- mm</p>
-                <p><strong>Velocidade do Vento:</strong> {% if weather_data.windspeed %}{{ weather_data.windspeed }} m/s{% else %}-- m/s{% endif %}</p>
-                <p><strong>Horário:</strong> {% if weather_data.time %}{{ weather_data.time }}{% else %}--{% endif %}</p>
-             </div>
+        <div class="weather-card" id="weather-card">
+            <h3>Clima Atual</h3>
+            <div id="weather-icon">
+                <img id="weather-icon-img" src="" alt="Ícone do Clima" style="display: none;" />
             </div>
+            <p><strong>Cidade:</strong> <span id="weather-city">Carregando...</span></p>
+            <p><strong>Temperatura:</strong> <span id="weather-temp">--</span>°C</p>
+            <p><strong>Descrição:</strong> <span id="weather-desc">--</span></p>
+            <p><strong>Velocidade do Vento:</strong> <span id="weather-wind">--</span> m/s</p>
+        </div>
         <div class="input-container">
             <label for="city_id">Insira o ID da Cidade: </label>
             <input type="text" id="city_id" placeholder="Ex: 524901" />
             <button onclick="fetchWeather()">Buscar Clima</button>
-        </div>
-        <div id="weather-result"></div> <!-- Onde os dados do clima serão exibidos -->
-        
 
-        <button class="btn-secondary" onclick="window.history.back();">Voltar</button>
+        <div >
+
+            <button onclick="window.history.back()">Voltar</button>           
+            
+        </div>
+        </div>
+
+        <div id="weather-result"></div> <!-- Onde os dados do clima serão exibidos -->
+           
+        
+        
     </div>
 
-    <script>
-        // Gráfico de Status das Ordens de Serviço
+    <script type="text/javascript">
+        // Converte os dados passados do Flask para JavaScript
+        const osStatusData = JSON.parse('{{ os_status | tojson | safe }}');
+    
+        // Extrai labels e valores
+        const labels = osStatusData.map(item => item.label);
+        const values = osStatusData.map(item => item.value);
+    
+        // Criação do gráfico de pizza
         const ctx = document.getElementById('osStatusChart').getContext('2d');
         new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: ['Em andamento', 'Finalizado', 'Abertos'],
+                labels: labels,
                 datasets: [{
-                    data: [25, 15, 10],
+                    data: values,
                     backgroundColor: ['#4CAF50', '#FF5722', '#FFC107']
                 }]
             },
@@ -238,40 +272,50 @@
                 }
             }
         });
+    </script>
+    
+<script>
 
         async function fetchWeather() {
-        const cityId = document.getElementById('city_id').value.trim(); // Pega o ID da cidade inserido
-        if (!cityId) {
-            alert('Por favor, insira o ID da cidade.');
+    const cityId = document.getElementById('city_id').value.trim();
+    if (!cityId) {
+        alert('Por favor, insira o ID da cidade.');
+        return;
+    }
+
+    try {
+        const response = await fetch(`/weather/${cityId}`);
+        const data = await response.json();
+
+        if (data.error) {
+            document.getElementById('weather-city').innerText = "Erro ao carregar";
+            document.getElementById('weather-temp').innerText = "--";
+            document.getElementById('weather-desc').innerText = "--";
+            document.getElementById('weather-wind').innerText = "--";
+            document.getElementById('weather-icon-img').style.display = "none";
             return;
         }
 
-        try {
-            // Fazendo uma requisição ao Flask com o ID da cidade
-            const response = await fetch(`/weather/${cityId}`);
-            const data = await response.json();
+        // Atualiza os valores do cartão fixo
+        document.getElementById('weather-city').innerText = data.city_name;
+        document.getElementById('weather-temp').innerText = data.temperature;
+        document.getElementById('weather-desc').innerText = data.description;
+        document.getElementById('weather-wind').innerText = data.windspeed;
 
-            if (data.error) {
-                document.getElementById('weather-result').innerHTML = `<p style="color: red;">${data.error}</p>`;
-                return;
-            }
+        // Atualiza o ícone do clima
+        const weatherIcon = document.getElementById('weather-icon-img');
+        weatherIcon.src = `http://openweathermap.org/img/wn/${data.icon}.png`;
+        weatherIcon.style.display = "block"; // Mostra o ícone
 
-            // Atualizando os dados no HTML
-            document.getElementById('weather-result').innerHTML = `
-                <h3>Clima Atual</h3>
-                <div id="weather-icon">
-                    <img src="http://openweathermap.org/img/wn/${data.icon}.png" alt="Ícone do Clima" />
-                </div>
-                <p><strong>Cidade:</strong> ${data.city_name}</p>
-                <p><strong>Temperatura:</strong> ${data.temperature}°C</p>
-                <p><strong>Descrição:</strong> ${data.description}</p>
-                <p><strong>Velocidade do Vento:</strong> ${data.windspeed} m/s</p>
-            `;
-        } catch (error) {
-            console.error('Erro ao buscar clima:', error);
-            document.getElementById('weather-result').innerHTML = `<p style="color: red;">Erro ao carregar os dados do clima.</p>`;
-        }
+    } catch (error) {
+        console.error('Erro ao buscar clima:', error);
+        document.getElementById('weather-city').innerText = "Erro ao carregar";
+        document.getElementById('weather-temp').innerText = "--";
+        document.getElementById('weather-desc').innerText = "--";
+        document.getElementById('weather-wind').innerText = "--";
+        document.getElementById('weather-icon-img').style.display = "none";
     }
+}
     </script>
 </body>
 </html>

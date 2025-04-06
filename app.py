@@ -72,16 +72,32 @@ def dashboard():
     # Obter o total de ordens de serviço
     cur.execute('SELECT COUNT(*) AS total FROM ordens_servico')
     total_os = cur.fetchone()["total"]  
-    os_status = [25, 15, 10]  # Em andamento, Finalizado, Abertos
+   
 
-    # Obtendo os dados do clima
-    
-    # Exemplo de ordens de serviço recentes
-    ordens_servico = [
-        {"id": 1, "cliente": "Cliente 1", "status": "Em andamento"},
-        {"id": 2, "cliente": "Cliente 2", "status": "Finalizado"},
-        {"id": 3, "cliente": "Cliente 3", "status": "Abertos"},
+
+
+   # cur.execute('SELECT COUNT(*) AS total FROM ordens_servico')
+    #total_os = cur.fetchone()["total"] 
+
+    # Buscar os status das OS
+    cur.execute("SELECT status FROM ordens_servico")
+    status_list = cur.fetchall()  # Lista de tuplas: [{'status': 'Aberto'}, ...]
+
+    # Contar os status
+    status_counts = {"Aberto": 0, "Em andamento": 0, "Finalizado": 0}
+    for row in status_list:
+        status = row['status']
+        if status in status_counts:
+            status_counts[status] += 1
+
+    os_status = [
+        {"label": "Aberto", "value": status_counts["Aberto"]},
+        {"label": "Em andamento", "value": status_counts["Em andamento"]},
+        {"label": "Finalizado", "value": status_counts["Finalizado"]}
     ]
+
+   
+
 
     return render_template('dashboard.html', 
                            total_equipamentos=total_equipamentos,
@@ -89,7 +105,7 @@ def dashboard():
                            os_status=os_status,
                            total_clientes= total_clientes,
                            weather_data=weather_data,  # Passando diretamente os dados do clima
-                           ordens_servico=ordens_servico)
+                           )
 
 
 

@@ -6,25 +6,60 @@
     <title>Acompanhamento de OS</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        .table-container {
+            max-height: 500px; /* Mostra ~10 linhas */
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background-color: #f8f9fa;
+            z-index: 1;
+        }
+
+        .action-buttons {
+            white-space: nowrap;
+        }
+
+        .action-buttons .btn {
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        /* Estiliza a barra de rolagem (opcional) */
+        .table-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .table-container::-webkit-scrollbar-thumb {
+            background-color: #999;
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Acompanhamento de Ordens de Serviço</h1>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Acompanhamento de Ordens de Serviço</h1>
         
         <div class="table-container">
-            <table class="table">
-                <thead>
+            <table class="table table-striped table-bordered">
+                <thead class="thead-light">
                     <tr>
                         <th>ID</th>
-                        <th>ID DO CLIENTE</th>
-                        <th>ID DO EQUIPAMENTO</th>
-                        <th>DESCRIÇÃO</th>
-                        <th>STATUS</th>
-                        
+                        <th>ID do Cliente</th>
+                        <th>ID do Equipamento</th>
+                        <th>Descrição</th>
+                        <th>Status</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Exibir os dados das OSs cadastradas -->
                     {% for ordem in ordens_servico %}
                     <tr>
                         <td>{{ ordem["id"] }}</td>
@@ -33,9 +68,9 @@
                         <td>{{ ordem["descricao"] }}</td>
                         <td>{{ ordem["status"] }}</td>
                         <td class="action-buttons">
-                            <button class="btn btn-secondary">EDITAR</button>
-                            <button class="btn btn-danger">EXCLUIR</button>
-                            <button class="btn btn-success">FINALIZAR</button>
+                            <button class="btn btn-secondary btn-sm">EDITAR</button>
+                            <button class="btn btn-danger btn-sm">EXCLUIR</button>
+                            <button class="btn btn-success btn-sm">FINALIZAR</button>
                         </td>
                     </tr>
                     {% endfor %}
@@ -43,7 +78,7 @@
             </table>
         </div>
 
-        <button type="button" class="btn btn-secondary btn-block" onclick="window.history.back();">Voltar</button>
+        <button type="button" class="btn btn-primary btn-block" onclick="window.history.back();">Voltar</button>
     </div>
 
     <!-- Scripts do Bootstrap -->
