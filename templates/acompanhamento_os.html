@@ -67,11 +67,23 @@
                         <td>{{ ordem["equipamento_id"] }}</td>
                         <td>{{ ordem["descricao"] }}</td>
                         <td>{{ ordem["status"] }}</td>
-                        <td class="action-buttons">
-                            <button class="btn btn-secondary btn-sm">EDITAR</button>
-                            <button class="btn btn-danger btn-sm">EXCLUIR</button>
-                            <button class="btn btn-success btn-sm">FINALIZAR</button>
-                        </td>
+                       <td class="action-buttons">
+    <!-- Editar OS -->
+    <form action="{{ url_for('editar_os', os_id=ordem['id']) }}" method="get" style="display:inline;">
+        <button class="btn btn-secondary btn-sm">EDITAR</button>
+    </form>
+
+    <!-- Excluir OS -->
+    <form action="{{ url_for('excluir_os', os_id=ordem['id']) }}" method="post" style="display:inline;">
+        <button class="btn btn-danger btn-sm">EXCLUIR</button>
+    </form>
+
+    <!-- Finalizar OS -->
+    <form action="{{ url_for('finalizar_os', os_id=ordem['id']) }}" method="post" style="display:inline;">
+        <button class="btn btn-success btn-sm">FINALIZAR</button>
+    </form>
+</td>
+
                     </tr>
                     {% endfor %}
                 </tbody>

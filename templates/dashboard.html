@@ -222,8 +222,8 @@ h2 {
             <p><strong>Velocidade do Vento:</strong> <span id="weather-wind">--</span> m/s</p>
         </div>
         <div class="input-container">
-            <label for="city_id">Insira o ID da Cidade: </label>
-            <input type="text" id="city_id" placeholder="Ex: 524901" />
+            <label for="city_id">Insira o nome da Cidade: </label>
+            <input type="text" id="city_id" placeholder="Ex: Sao Paulo" />
             <button onclick="fetchWeather()">Buscar Clima</button>
 
         <div >
@@ -279,7 +279,7 @@ h2 {
         async function fetchWeather() {
     const cityId = document.getElementById('city_id').value.trim();
     if (!cityId) {
-        alert('Por favor, insira o ID da cidade.');
+        alert('Por favor, insira a cidade.');
         return;
     }
 

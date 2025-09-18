@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Ordem de Serviço</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="container mt-5">
+    <h2 class="mb-4">Editar Ordem de Serviço</h2>
+
+    <form method="POST">
+        <div class="form-group">
+            <label>ID do Cliente:</label>
+            <input type="number" name="cliente_id" class="form-control" value="{{ ordem.cliente_id }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>ID do Equipamento:</label>
+            <input type="number" name="equipamento_id" class="form-control" value="{{ ordem.equipamento_id }}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Descrição:</label>
+            <textarea name="descricao" class="form-control" rows="3" required>{{ ordem.descricao }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Status:</label>
+            <select name="status" class="form-control" required>
+                <option value="Aberta" {% if ordem.status == 'Aberta' %}selected{% endif %}>Aberta</option>
+                <option value="Em Andamento" {% if ordem.status == 'Em Andamento' %}selected{% endif %}>Em Andamento</option>
+                <option value="Finalizada" {% if ordem.status == 'Finalizada' %}selected{% endif %}>Finalizada</option>
+                <option value="Cancelada" {% if ordem.status == 'Cancelada' %}selected{% endif %}>Cancelada</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{{ url_for('acompanhamento_os') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

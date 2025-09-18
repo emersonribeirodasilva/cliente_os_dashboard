@@ -16,12 +16,12 @@ app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'cliente_os'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
-API_KEY = "9e17be5dd05622ea023dd42a7c93b64a"
 
-@app.route('/weather/<int:city_id>', methods=['GET'])
-def get_weather(city_id):
+
+@app.route('/weather/<city_name>', methods=['GET'])
+def get_weather(city_name):
     API_KEY = "9e17be5dd05622ea023dd42a7c93b64a"
-    url = f"http://api.openweathermap.org/data/2.5/forecast?id={city_id}&appid={API_KEY}&units=metric&lang=pt"
+    url = f"http://api.openweathermap.org/data/2.5/forecast?q={city_name}&appid={API_KEY}&units=metric&lang=pt"
 
     try:
         response = requests.get(url)
@@ -37,10 +37,10 @@ def get_weather(city_id):
             "temperature": data["list"][0]["main"]["temp"],
             "windspeed": data["list"][0]["wind"]["speed"],
             "time": data["list"][0]["dt_txt"],
-            "city_name": data["city"]["name"]  # Adicionando o nome da cidade
+            "city_name": data["city"]["name"]
         }
 
-        return weather_data  # Retorna os dados diretamente (não jsonify)
+        return weather_data
 
     except requests.exceptions.RequestException as e:
         print("Erro na requisição HTTP:", e)
@@ -51,12 +51,12 @@ def get_weather(city_id):
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
-    city_id = "5128581"  # ID padrão (Nova York)
+    city_name = "Sao Paulo"  # ID padrão (Nova York)
     
     if request.method == 'POST':  # Verifica se o formulário foi enviado
-        city_id = request.form.get('city_id', city_id)  # Pega o ID do formulário, se existir
+        city_name = request.form.get('city_id', city_name)  # Pega o ID do formulário, se existir
 
-    weather_data = get_weather(city_id)  # Obtém os dados do clima city_id para a função
+    weather_data = get_weather(city_name)  # Obtém os dados do clima city_name para a função
 
     cur = mysql.connection.cursor()  # Retorna os resultados como dicionários
     cur.execute("USE cliente_os")
@@ -268,6 +268,96 @@ def acompanhamento_cliente():
 
     # Passando os dados para o template HTML
     return render_template('acompanhamento_cliente.html', clientes=clientes)
+# Editar cliente (carrega formulário de edição)
+@app.route('/editar_cliente/<int:cliente_id>', methods=['GET', 'POST'])
+def editar_cliente(cliente_id):
+    cur = mysql.connection.cursor()
+
+    if request.method == 'POST':
+        nome = request.form['nome']
+        email = request.form['email']
+        telefone = request.form['telefone']
+        endereco = request.form['endereco']
+        cpf = request.form['cpf']
+
+        cur.execute("""
+            UPDATE clientes 
+            SET nome=%s, email=%s, telefone=%s, endereco=%s, cpf=%s 
+            WHERE id=%s
+        """, (nome, email, telefone, endereco, cpf, cliente_id))
+        mysql.connection.commit()
+        cur.close()
+        return redirect(url_for('acompanhamento_cliente'))
+
+    # Busca os dados do cliente para preencher o formulário
+    cur.execute("SELECT * FROM clientes WHERE id = %s", (cliente_id,))
+    cliente = cur.fetchone()
+    cur.close()
+    return render_template('editar_cliente.html', cliente=cliente)
+
+# Desativar cliente
+@app.route('/desativar_cliente/<int:cliente_id>', methods=['POST'])
+def desativar_cliente(cliente_id):
+    cur = mysql.connection.cursor()
+    cur.execute("UPDATE clientes SET ativo = FALSE WHERE id = %s", (cliente_id,))
+    mysql.connection.commit()
+    cur.close()
+    return redirect(url_for('acompanhamento_cliente'))
+
+# Ativar cliente
+@app.route('/ativar_cliente/<int:cliente_id>', methods=['POST'])
+def ativar_cliente(cliente_id):
+    cur = mysql.connection.cursor()
+    cur.execute("UPDATE clientes SET ativo = TRUE WHERE id = %s", (cliente_id,))
+    mysql.connection.commit()
+    cur.close()
+    return redirect(url_for('acompanhamento_cliente'))
+
+@app.route('/editar_os/<int:os_id>', methods=['GET', 'POST'])
+def editar_os(os_id):
+    cur = mysql.connection.cursor()
+
+    if request.method == 'POST':
+        cliente_id = request.form['cliente_id']
+        equipamento_id = request.form['equipamento_id']
+        descricao = request.form['descricao']
+        status = request.form['status']
+
+        cur.execute("""
+            UPDATE ordens_servico 
+            SET cliente_id=%s, equipamento_id=%s, descricao=%s, status=%s
+            WHERE id=%s
+        """, (cliente_id, equipamento_id, descricao, status, os_id))
+        mysql.connection.commit()
+        cur.close()
+        return redirect(url_for('acompanhamento_os'))
+
+    # Busca os dados da O.S. para preencher o formulário
+    cur.execute("SELECT * FROM ordens_servico WHERE id = %s", (os_id,))
+    ordem = cur.fetchone()
+    cur.close()
+
+    return render_template('editar_os.html', ordem=ordem)
+
+
+@app.route('/excluir_os/<int:os_id>', methods=['POST'])
+def excluir_os(os_id):
+    cur = mysql.connection.cursor()
+    cur.execute("DELETE FROM ordens_servico WHERE id = %s", (os_id,))
+    mysql.connection.commit()
+    cur.close()
+    return redirect(url_for('acompanhamento_os'))
+
+
+@app.route('/finalizar_os/<int:os_id>', methods=['POST'])
+def finalizar_os(os_id):
+    cur = mysql.connection.cursor()
+    cur.execute("UPDATE ordens_servico SET status = 'Finalizada' WHERE id = %s", (os_id,))
+    mysql.connection.commit()
+    cur.close()
+    return redirect(url_for('acompanhamento_os'))
+
+
 
 
 
