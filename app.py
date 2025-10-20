@@ -343,7 +343,7 @@ def editar_os(os_id):
 @app.route('/excluir_os/<int:os_id>', methods=['POST'])
 def excluir_os(os_id):
     cur = mysql.connection.cursor()
-    cur.execute("DELETE FROM ordens_servico WHERE id = %s", (os_id,))
+    cur.execute("UPDATE ordens_servico SET status = 'Excluído' WHERE id = %s", (os_id,))
     mysql.connection.commit()
     cur.close()
     return redirect(url_for('acompanhamento_os'))
@@ -352,11 +352,10 @@ def excluir_os(os_id):
 @app.route('/finalizar_os/<int:os_id>', methods=['POST'])
 def finalizar_os(os_id):
     cur = mysql.connection.cursor()
-    cur.execute("UPDATE ordens_servico SET status = 'Finalizada' WHERE id = %s", (os_id,))
+    cur.execute("UPDATE ordens_servico SET status = 'Finalizado' WHERE id = %s", (os_id,))
     mysql.connection.commit()
     cur.close()
     return redirect(url_for('acompanhamento_os'))
-
 
 
 
