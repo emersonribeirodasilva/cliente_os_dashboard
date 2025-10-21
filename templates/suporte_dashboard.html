@@ -1,42 +1,93 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suporte Dashboard</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">    
-    <style>
-        body {
-            background: url("{{ url_for('static', filename='img/painel manutecao.jpg') }}") no-repeat center center fixed;
-            background-size: cover;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-      </style>  
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel - Suporte</title>
 
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body { padding-top:56px; }
+    #sidebar { width:220px; position:fixed; top:56px; left:0; bottom:0; background:#fff; border-right:1px solid rgba(0,0,0,.06); padding:1rem; overflow:auto; }
+    #main { margin-left:220px; padding:1.5rem; min-height:100vh; background:#f6f7fb; display:flex; align-items:flex-start; }
+    @media(max-width:991px){ #sidebar{position:static;width:100%;height:auto;} #main{margin-left:0;} }
+    .small-muted{ color:var(--muted); font-size:.9rem; }
+    .hero-min { width:100%; border-radius:8px; padding:4.5rem 2rem; background: linear-gradient(180deg, rgba(9,30,66,0.03), rgba(255,255,255,0.6)); text-align:center; }
+    .hero-title { font-size:2.2rem; font-weight:700; color:var(--text); margin-bottom:0.5rem; }
+    .hero-actions { margin-top:1rem; display:flex; gap:1rem; justify-content:center; }
+  </style>
 </head>
-<body class="dashboard-bg d-flex justify-content-center align-items-center min-vh-100">
-    <div class="container text-center p-5" style="background: rgba(255, 255, 255, 0.9); border-radius: 15px;">
-        <h2 class="mb-4">Bem-vindo ao Painel de Suporte</h2>
-        <div class="d-flex flex-column align-items-center gap-4">
-            <a href="{{ url_for('cadastro_cliente') }}" class="btn btn-primary btn-lg w-100 mb-3">Cadastrar Cliente</a>
-            <a href="{{ url_for('cadastro_usuario') }}" class="btn btn-primary btn-lg w-100 mb-3">Cadastro Usuario</a>
-            <a href="{{ url_for('acompanhamento_cliente') }}" class="btn btn-primary btn-lg w-100 mb-3">Acompanhar Cliente</a>
-            <a href="{{ url_for('cadastro_equipamento') }}" class="btn btn-primary btn-lg w-100 mb-3">Cadastrar Equipamento</a>
-            <a href="{{ url_for('cadastro_os') }}" class="btn btn-primary btn-lg w-100 mb-3">Cadastrar O.S</a>
-            <a href="{{ url_for('acompanhamento_os') }}" class="btn btn-primary btn-lg w-100 mb-3">Acompanhar O.S</a>
-            <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg w-100 mb-3">Dashboard</a>            
-        </div>
-        <button type="button" class="btn btn-secondary btn-block" onclick="window.history.back();">SAIR</button>
-    </div>
+<body>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+  <div class="container-fluid">
+    <button class="btn btn-outline-secondary d-lg-none mr-2" id="toggleSidebar"><i class="fas fa-bars"></i></button>
+    <a class="navbar-brand font-weight-bold" href="{{ url_for('suporte_dashboard') }}">Minha Empresa</a>
+
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mr-auto d-none d-lg-flex">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('suporte_dashboard') }}">Início</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('compradores') }}">Compradores</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('lista_equipamentos') }}">Equipamentos</a></li>
+      </ul>
+
+      <div class="ml-auto d-flex align-items-center">
+        <span class="text-muted mr-3 small">{{ session.get('username') if session else '' }}</span>
+        <a class="btn btn-outline-primary btn-sm" href="{{ url_for('cadastro_equipamento') }}">Novo Equip.</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Sidebar (simples navegação) -->
+<aside id="sidebar" class="d-none d-lg-block">
+  <h6 class="text-muted">Navegação</h6>
+  <nav class="nav flex-column mb-3">
+    <a class="nav-link" href="{{ url_for('suporte_dashboard') }}"><i class="fas fa-home"></i> Início</a>
+    <a class="nav-link" href="{{ url_for('acompanhamento_os') }}"><i class="fas fa-clipboard-list"></i> Ordens</a>
+    <a class="nav-link" href="{{ url_for('lista_equipamentos') }}"><i class="fas fa-cogs"></i> Equipamentos</a>
+    <a class="nav-link" href="{{ url_for('estoque_baixa') }}"><i class="fas fa-trash-alt"></i> Estoque - Baixa</a>
+    <a class="nav-link" href="{{ url_for('compradores') }}"><i class="fas fa-handshake"></i> Compradores</a>
+    <a class="nav-link" href="{{ url_for('cadastro_cliente') }}"><i class="fas fa-users"></i> Clientes</a>
+  </nav>
+
+  <hr>
+
+  <h6 class="text-muted">Informações</h6>
+  <p class="small text-muted">Use os relatórios para exportar/visualizar O.S. e estoque de baixa.</p>
+</aside>
+
+<!-- Main content: minimal hero + report links -->
+<main id="main">
+  <div class="container-fluid">
+    <div class="hero-min">
+      <div class="hero-title">Soluções em Manuteção</div>
+
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="{{ url_for('relatorio_os') }}"><i class="fas fa-file-alt mr-2"></i> Relatório O.S.</a>
+        <a class="btn btn-warning" href="{{ url_for('relatorio_baixa') }}"><i class="fas fa-trash-alt mr-2"></i> Relatório Estoque‑Baixa</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="bg-light text-center py-3" style="margin-left:220px;">
+  <div class="container">
+    <small>© {{ config.get('NAME', 'Minha Empresa') }} - Todos os direitos reservados.</small>
+  </div>
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  document.getElementById('toggleSidebar')?.addEventListener('click', function(){
+    const sb = document.getElementById('sidebar');
+    if(!sb) return;
+    sb.classList.toggle('d-none');
+  });
+</script>
 </body>
 </html>

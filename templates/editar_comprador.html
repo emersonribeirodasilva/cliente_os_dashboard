@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Editar Comprador</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="container mt-4">
+    <h3 class="mb-4">Editar Empresa Compradora</h3>
+
+    <form method="POST">
+      <div class="form-group">
+        <label for="nome">Nome</label>
+        <input id="nome" name="nome" class="form-control" required value="{{ comprador['nome'] }}">
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="cnpj">CNPJ</label>
+          <input id="cnpj" name="cnpj" class="form-control" value="{{ comprador['cnpj'] }}">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="contato">Contato</label>
+          <input id="contato" name="contato" class="form-control" value="{{ comprador['contato'] }}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input id="email" name="email" class="form-control" type="email" value="{{ comprador['email'] }}">
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="telefone">Telefone</label>
+          <input id="telefone" name="telefone" class="form-control" value="{{ comprador['telefone'] }}">
+        </div>
+        <div class="form-group col-md-6">
+          <label for="endereco">Endereço</label>
+          <input id="endereco" name="endereco" class="form-control" value="{{ comprador['endereco'] }}">
+        </div>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{{ url_for('compradores') }}" class="btn btn-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

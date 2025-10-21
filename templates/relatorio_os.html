@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Relatório O.S.</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="p-3">
+  <div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4>Relatório de Ordens de Serviço</h4>
+      <div>
+        <a class="btn btn-secondary" href="{{ url_for('suporte_dashboard') }}">Voltar</a>
+        <a class="btn btn-primary" href="{{ url_for('relatorio_os') }}">Atualizar</a>
+        <a class="btn btn-outline-success" href="{{ url_for('relatorio_os_pdf') }}" target="_blank">Baixar PDF (Todos)</a>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr><th>ID</th><th>Cliente</th><th>Equipamento</th><th>Status</th><th>Data</th><th>Descrição</th><th>Ações</th></tr>
+        </thead>
+        <tbody>
+          {% for r in rows %}
+          <tr>
+            <td><a href="{{ url_for('relatorio_os_individual', os_id=r['id']) }}">{{ r['id'] }}</a></td>
+            <td>{{ r['cliente_nome'] or '-' }}</td>
+            <td>{{ r['equipamento_modelo'] or '-' }}</td>
+            <td>{{ r['status'] }}</td>
+            <td>{{ r['data_criacao'] }}</td>
+            <td>{{ r['descricao'] }}</td>
+            <td>
+              <a class="btn btn-sm btn-outline-primary" href="{{ url_for('relatorio_os_individual', os_id=r['id']) }}">Ver</a>
+              <a class="btn btn-sm btn-outline-success" href="{{ url_for('relatorio_os_individual_pdf', os_id=r['id']) }}" target="_blank">PDF</a>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="7" class="text-center text-muted">Nenhuma O.S. encontrada.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

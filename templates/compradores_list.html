@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Compradores</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="container mt-4">
+    <h3 class="mb-4">Empresas Compradoras</h3>
+    <div class="mb-3">
+      <a href="{{ url_for('suporte_dashboard') }}" class="btn btn-light">Voltar</a>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>ID</th><th>Nome</th><th>CNPJ</th><th>Contato</th><th>E-mail</th><th>Telefone</th><th>Endereço</th><th>Criado em</th><th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in compradores %}
+          <tr>
+            <td>{{ c['id'] }}</td>
+            <td>{{ c['nome'] }}</td>
+            <td>{{ c['cnpj'] }}</td>
+            <td>{{ c['contato'] }}</td>
+            <td>{{ c['email'] }}</td>
+            <td>{{ c['telefone'] }}</td>
+            <td>{{ c['endereco'] }}</td>
+            <td>{{ c['created_at'] }}</td>
+            <td>
+              <a href="{{ url_for('editar_comprador', comprador_id=c['id']) }}" class="btn btn-sm btn-secondary">Editar</a>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="9" class="text-center">Nenhum comprador cadastrado.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

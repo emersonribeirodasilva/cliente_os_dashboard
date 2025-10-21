@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Relatório Estoque - Baixa</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="p-3">
+  <div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h4>Relatório - Estoque (Baixa)</h4>
+      <div>
+        <a class="btn btn-secondary" href="{{ url_for('suporte_dashboard') }}">Voltar</a>
+        <a class="btn btn-primary" href="{{ url_for('relatorio_baixa') }}">Atualizar</a>
+        <a class="btn btn-outline-success" href="{{ url_for('relatorio_baixa_pdf') }}" target="_blank">Baixar PDF</a>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr><th>ID</th><th>ID Equip.</th><th>Modelo</th><th>Marca</th><th>Data Baixa</th><th>Motivo</th></tr>
+        </thead>
+        <tbody>
+          {% for r in rows %}
+          <tr>
+            <td>{{ r['id'] }}</td>
+            <td>{{ r['equipamento_id'] }}</td>
+            <td>{{ r['modelo'] or '-' }}</td>
+            <td>{{ r['marca'] or '-' }}</td>
+            <td>{{ r['data_baixa'] }}</td>
+            <td>{{ r['motivo'] or '-' }}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6" class="text-center text-muted">Nenhum registro de baixa.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

@@ -61,7 +61,12 @@
                 </thead>
                 <tbody>
                     {% for ordem in ordens_servico %}
-                    <tr>
+                    <tr class="
+        {% if ordem['status'] == 'Finalizado' %}table-primary
+        {% elif ordem['status'] == 'Em Andamento' %}table-warning
+        {% elif ordem['status'] == 'Excluído' %}table-danger
+        {% endif %}
+    ">
                         <td>{{ ordem["id"] }}</td>
                         <td>{{ ordem["cliente_id"] }}</td>
                         <td>{{ ordem["equipamento_id"] }}</td>
@@ -69,19 +74,19 @@
                         <td>{{ ordem["status"] }}</td>
                        <td class="action-buttons">
     <!-- Editar OS -->
-    <form action="{{ url_for('editar_os', os_id=ordem['id']) }}" method="get" style="display:inline;">
-        <button class="btn btn-secondary btn-sm">EDITAR</button>
-    </form>
+     <form action="{{ url_for('editar_os', os_id=ordem['id']) }}" method="get" style="display:inline;">
+                <button class="btn btn-secondary btn-sm">EDITAR</button>
+            </form>
 
-    <!-- Excluir OS -->
-    <form action="{{ url_for('excluir_os', os_id=ordem['id']) }}" method="post" style="display:inline;">
-        <button class="btn btn-danger btn-sm">EXCLUIR</button>
-    </form>
+            <!-- Excluir OS -->
+            <form action="{{ url_for('excluir_os', os_id=ordem['id']) }}" method="post" style="display:inline;">
+                <button class="btn btn-danger btn-sm">EXCLUIR</button>
+            </form>
 
-    <!-- Finalizar OS -->
-    <form action="{{ url_for('finalizar_os', os_id=ordem['id']) }}" method="post" style="display:inline;">
-        <button class="btn btn-success btn-sm">FINALIZAR</button>
-    </form>
+            <!-- Finalizar OS -->
+            <form action="{{ url_for('finalizar_os', os_id=ordem['id']) }}" method="post" style="display:inline;">
+                <button class="btn btn-success btn-sm">FINALIZAR</button>
+     </form>
 </td>
 
                     </tr>
