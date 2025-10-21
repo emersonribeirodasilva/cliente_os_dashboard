@@ -918,6 +918,5 @@ def relatorio_os_individual_pdf(os_id):
     buffer.seek(0)
     return send_file(buffer, mimetype='application/pdf', as_attachment=True, download_name=f'os_{r.get("id")}.pdf')
 
-
 if __name__ == '__main__':
     app.run(debug=True)
