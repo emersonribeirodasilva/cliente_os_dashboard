@@ -46,6 +46,7 @@
   <h6 class="text-muted">Navegação</h6>
   <nav class="nav flex-column mb-3">
     <a class="nav-link" href="{{ url_for('suporte_dashboard') }}"><i class="fas fa-home"></i> Início</a>
+    <a class="nav-link" href="{{ url_for('dashboard') }}"><i class="fas fa-chart-line"></i> Dashboard</a>
     <a class="nav-link" href="{{ url_for('acompanhamento_os') }}"><i class="fas fa-clipboard-list"></i> Ordens</a>
     <a class="nav-link" href="{{ url_for('lista_equipamentos') }}"><i class="fas fa-cogs"></i> Equipamentos</a>
     <a class="nav-link" href="{{ url_for('estoque_baixa') }}"><i class="fas fa-trash-alt"></i> Estoque - Baixa</a>
@@ -63,11 +64,11 @@
 <main id="main">
   <div class="container-fluid">
     <div class="hero-min">
-      <div class="hero-title">Soluções em Manuteção</div>
+      <div class="hero-title">Soluções em Manutenção</div>
 
       <div class="hero-actions">
         <a class="btn btn-primary" href="{{ url_for('relatorio_os') }}"><i class="fas fa-file-alt mr-2"></i> Relatório O.S.</a>
-        <a class="btn btn-warning" href="{{ url_for('relatorio_baixa') }}"><i class="fas fa-trash-alt mr-2"></i> Relatório Estoque‑Baixa</a>
+        <a class="btn btn-warning" href="{{ url_for('relatorio_baixa') }}"><i class="fas fa-trash-alt mr-2"></i> Relatório Estoque-Baixa</a>
       </div>
     </div>
   </div>

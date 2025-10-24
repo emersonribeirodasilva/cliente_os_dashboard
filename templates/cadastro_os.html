@@ -53,13 +53,14 @@
                     <select id="status" name="status" class="form-control">
                         <option value="Aberto">Aberto</option>
                         <option value="Em Andamento">Em Andamento</option>
-                        <option value="Finalizado">Finalizado</option>
+                        <option value="Finalizado">Finalizado</option> 
                     </select>
                 </div>
 
                 <div class="d-flex gap-2">
                     <button type="submit" name="action" value="save_os" class="btn btn-primary">Salvar O.S.</button>
-                    <a class="btn btn-secondary" href="{{ url_for('lista_equipamentos') }}">Voltar</a>
+                     <button type="button" class="btn btn-secondary btn-block" onclick="window.history.back();">Sair</button>
+                   
                 </div>
             </div>
 
@@ -97,8 +98,8 @@
                 </div>
 
                 <div class="d-flex gap-2">
-                    <button type="submit" name="action" value="save_empresa" class="btn btn-success">Salvar Empresa Compradora</button>
-                    <a class="btn btn-secondary" href="{{ url_for('cadastro_os') }}">Voltar</a>
+                    <button type="submit" name="action" value="save_empresa" class="btn btn-primary">Salvar Empresa Compradora</button>
+                    <button type="button" class="btn btn-secondary btn-block" onclick="window.history.back();">Sair</button>
                 </div>
             </div>
         </div>
