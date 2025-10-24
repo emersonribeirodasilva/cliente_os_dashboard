@@ -4,6 +4,8 @@ import io
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
 from werkzeug.security import generate_password_hash, check_password_hash
 from database.db import init_db, mysql
+from flask import current_app
+
 
 
 app = Flask(__name__)
@@ -19,64 +21,7 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 # Inicializa o DB apenas após as configurações estarem definidas
 init_db(app)
 
-# Cria tabelas necessárias se não existirem (evita erro 1146 em produção)
-with app.app_context():
-    cur = mysql.connection.cursor()
-    cur.execute("CREATE DATABASE IF NOT EXISTS cliente_os")
-    cur.execute("USE cliente_os")
 
-    # tabela equipamentos mínima (garantir InnoDB/charset)
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS equipamentos (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        modelo VARCHAR(255),
-        marca VARCHAR(255),
-        data_fabricacao DATE,
-        descricao TEXT,
-        status VARCHAR(20) DEFAULT 'Ativo'
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-    """)
-
-    # tabela baixa_equipamentos para registrar descartes (mesmo engine/charset)
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS baixa_equipamentos (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        equipamento_id INT NOT NULL,
-        data_baixa DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        motivo TEXT,
-        CONSTRAINT fk_baixa_equipamento FOREIGN KEY (equipamento_id)
-            REFERENCES equipamentos(id) ON DELETE CASCADE
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-    """)
-
-    # tabela de compradores (empresas que compram equipamentos baixados)
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS compradores (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        nome VARCHAR(255) NOT NULL,
-        cnpj VARCHAR(30),
-        contato VARCHAR(255),
-        email VARCHAR(255),
-        telefone VARCHAR(50),
-        endereco TEXT,
-        created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-    """)
-
-    # tabela ordens_servico (mínima)
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS ordens_servico (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        cliente_id INT,
-        equipamento_id INT,
-        descricao TEXT,
-        status VARCHAR(30) DEFAULT 'Aberto',
-        data_criacao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
-    """)
-
-    mysql.connection.commit()
-    cur.close()
 
 @app.route('/weather/<city_name>', methods=['GET'])
 def get_weather(city_name):
@@ -289,61 +234,109 @@ def cadastro_equipamento():
     cur.close()
     return render_template('cadastro_equipamento.html', equipamento=None)
 
-# 📌 Cadastro de Ordem de Serviço (O.S.)
 @app.route('/cadastro_os', methods=['GET', 'POST'])
 def cadastro_os():
-    cur = mysql.connection.cursor()
-    cur.execute("USE cliente_os")
+    """
+    Rota reforçada com logs e tratamento. Deve salvar:
+      - save_os -> insere em ordens_servico
+      - save_empresa -> insere em compradores
+    """
+    # determina aba ativa (default 'os')
+    active_tab = request.args.get('tab', 'os')
 
     if request.method == 'POST':
-        action = request.form.get('action')  # valor do botão: save_os ou save_empresa
+        # log do form para ajudar debug
+        current_app.logger.info("POST /cadastro_os form data: %s", dict(request.form))
 
-        if action == 'save_os':
-            cliente_id = request.form.get('cliente_id') or None
-            equipamento_id = request.form.get('equipamento_id') or None
-            descricao = request.form.get('descricao') or ''
-            status = request.form.get('status') or 'Aberto'
+        action = request.form.get('action')
+        # cursor e uso do DB
+        cur = mysql.connection.cursor()
+        cur.execute("USE cliente_os")
 
-            cur.execute("""
-                INSERT INTO ordens_servico (cliente_id, equipamento_id, descricao, status)
-                VALUES (%s, %s, %s, %s)
-            """, (cliente_id, equipamento_id, descricao, status))
-            mysql.connection.commit()
-            flash('Ordem de serviço cadastrada.', 'success')
-            # redireciona para a mesma página com a aba empresa ativa
-            cur.close()
-            return redirect(url_for('cadastro_os', tab='empresa'))
+        try:
+            if action == 'save_os':
+                cliente_id = request.form.get('cliente_id') or None
+                equipamento_id = request.form.get('equipamento_id') or None
+                descricao = (request.form.get('descricao') or '').strip()
+                status = request.form.get('status') or 'Aberto'
 
-        elif action == 'save_empresa':
-            nome = request.form.get('nome') or ''
-            cnpj = request.form.get('cnpj') or ''
-            contato = request.form.get('contato') or ''
-            email = request.form.get('email') or ''
-            telefone = request.form.get('telefone') or ''
-            endereco = request.form.get('endereco') or ''
+                # validação mínima
+                if not cliente_id:
+                    flash('Selecione um cliente antes de salvar a O.S.', 'danger')
+                    return redirect(url_for('cadastro_os', tab='os'))
 
-            cur.execute("""
-                INSERT INTO compradores (nome, cnpj, contato, email, telefone, endereco)
-                VALUES (%s, %s, %s, %s, %s, %s)
-            """, (nome, cnpj, contato, email, telefone, endereco))
-            mysql.connection.commit()
-            flash('Empresa compradora cadastrada.', 'success')
-            cur.close()
-            return redirect(url_for('cadastro_os', tab='empresa'))
+                try:
+                    cur.execute("""
+                        INSERT INTO ordens_servico (cliente_id, equipamento_id, descricao, status)
+                        VALUES (%s, %s, %s, %s)
+                    """, (cliente_id, equipamento_id, descricao, status))
+                    mysql.connection.commit()
+                    flash('Ordem de serviço cadastrada com sucesso!', 'success')
+                    current_app.logger.info("Ordem inserida: cliente=%s equipamento=%s", cliente_id, equipamento_id)
+                except Exception as exc:
+                    mysql.connection.rollback()
+                    current_app.logger.exception("Erro inserindo ordens_servico: %s", exc)
+                    flash('Erro ao cadastrar a O.S. (ver logs).', 'danger')
 
-    # GET -> carregar listas para selects
-    cur.execute("SELECT id, nome FROM clientes ORDER BY nome")
-    clientes = cur.fetchall()
+                return redirect(url_for('cadastro_os', tab='os'))
 
-    cur.execute("SELECT id, modelo, marca, status FROM equipamentos ORDER BY id DESC")
-    equipamentos = cur.fetchall()
+            elif action == 'save_empresa':
+                nome = (request.form.get('nome') or '').strip()
+                cnpj = request.form.get('cnpj') or ''
+                contato = request.form.get('contato') or ''
+                email = request.form.get('email') or ''
+                telefone = request.form.get('telefone') or ''
+                endereco = request.form.get('endereco') or ''
 
-    cur.close()
+                if not nome:
+                    flash('O campo Nome da Empresa é obrigatório.', 'danger')
+                    return redirect(url_for('cadastro_os', tab='empresa'))
 
-    # define aba ativa pelo query param ?tab=empresa ou default 'os'
-    active_tab = request.args.get('tab', 'os')
-    return render_template('cadastro_os.html', clientes=clientes, equipamentos=equipamentos, active_tab=active_tab)
+                try:
+                    cur.execute("""
+                        INSERT INTO compradores (nome, cnpj, contato, email, telefone, endereco)
+                        VALUES (%s, %s, %s, %s, %s, %s)
+                    """, (nome, cnpj, contato, email, telefone, endereco))
+                    mysql.connection.commit()
+                    flash('Empresa compradora cadastrada com sucesso!', 'success')
+                    current_app.logger.info("Comprador inserido: %s", nome)
+                except Exception as exc:
+                    mysql.connection.rollback()
+                    current_app.logger.exception("Erro inserindo compradores: %s", exc)
+                    flash('Erro ao cadastrar a empresa (ver logs).', 'danger')
 
+                return redirect(url_for('cadastro_os', tab='empresa'))
+
+            else:
+                # ação não reconhecida
+                current_app.logger.warning("Ação desconhecida no cadastro_os: %s", action)
+                flash('Ação inválida.', 'warning')
+                return redirect(url_for('cadastro_os', tab=active_tab))
+
+        finally:
+            try:
+                cur.close()
+            except Exception:
+                pass
+
+    # GET: carregar selects
+    cur = mysql.connection.cursor()
+    cur.execute("USE cliente_os")
+    try:
+        cur.execute("SELECT id, nome FROM clientes ORDER BY nome")
+        clientes = cur.fetchall()
+
+        cur.execute("SELECT id, modelo, marca, status FROM equipamentos ORDER BY id DESC")
+        equipamentos = cur.fetchall()
+    finally:
+        cur.close()
+
+    return render_template(
+        'cadastro_os.html',
+        clientes=clientes,
+        equipamentos=equipamentos,
+        active_tab=active_tab
+    )
 # 🔍 Outras rotas
 @app.route('/suporte_dashboard')
 def suporte_dashboard():
