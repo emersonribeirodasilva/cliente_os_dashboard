@@ -1,4 +1,4 @@
-'''from flask import Flask
+from flask import Flask
 from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash
 
@@ -27,4 +27,3 @@ def create_user():
 
 if __name__ == '__main__':
     create_user()
-'''

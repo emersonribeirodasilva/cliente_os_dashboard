@@ -1,49 +1,154 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Ordem de Serviço</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Cadastro O.S. / Empresa Compradora</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-   
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center">Cadastro de Ordem de Serviço</h1>
-        <form action="/cadastro_os" method="POST">
-            <div class="form-group">
-                <label for="cliente_id">Cliente:</label>
-                <textarea id="cliente_id" name="cliente_id" required class="form-control"></textarea>
-            </div>
+<div class="container mt-4">
+    <h3 class="mb-4 text-center">Cadastro de Ordem de Serviço / Empresa Compradora</h3>
 
-            <div class="form-group">
-                <label for="equipamento_id">Equipamento:</label>
-                <textarea id="equipamento_id" name="equipamento_id" required class="form-control"></textarea>
+    <!-- Mensagens de retorno -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, msg in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ msg }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 
-            </div>
+    <!-- Abas -->
+    <ul class="nav nav-tabs" id="osTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link {% if active_tab != 'empresa' %}active{% endif %}" id="os-tab" data-toggle="tab" href="#tab-os" role="tab">
+                1️⃣ Cadastro O.S.
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if active_tab == 'empresa' %}active{% endif %}" id="empresa-tab" data-toggle="tab" href="#tab-empresa" role="tab">
+                2️⃣ Empresa Compradora
+            </a>
+        </li>
+    </ul>
 
-            <div class="form-group">
-                <label for="descricao">Descrição da OS:</label>
-                <textarea id="descricao" name="descricao" required class="form-control"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="status">Status</label>    
-                <select class="form-control" id="status" name="status" required>
-                    <option value="aberto">ABERTO</option>                    
-                </select>
-            </div>
+    <!-- Conteúdo das abas -->
+    <div class="tab-content mt-3">
 
+        <!-- Formulário O.S. -->
+        <div class="tab-pane fade {% if active_tab != 'empresa' %}show active{% endif %}" id="tab-os" role="tabpanel">
+            <form method="POST" action="{{ url_for('cadastro_os') }}">
+                <input type="hidden" name="action" value="save_os">
 
-            <button type="submit" class="btn btn-primary btn-block">Cadastrar OS</button>
-            <button type="button" class="btn btn-secondary btn-block" onclick="window.history.back();">Voltar</button>
-        </form>
+                <div class="form-group">
+                    <label for="cliente_id">Cliente</label>
+                    <select id="cliente_id" name="cliente_id" class="form-control">
+                        <option value="">-- Selecionar cliente --</option>
+                        {% for c in clientes %}
+                            <option value="{{ c['id'] }}">{{ c['nome'] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-       
+                <div class="form-group">
+                    <label for="equipamento_id">Equipamento (opcional)</label>
+                    <select id="equipamento_id" name="equipamento_id" class="form-control">
+                        <option value="">-- Selecionar equipamento --</option>
+                        {% for e in equipamentos %}
+                            <option value="{{ e['id'] }}">{{ e['modelo'] }} - {{ e['marca'] }} {% if e['status'] %}({{ e['status'] }}){% endif %}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="descricao">Descrição do Problema</label>
+                    <textarea id="descricao" name="descricao" class="form-control" rows="4" placeholder="Descreva o problema encontrado..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status" class="form-control">
+                        <option value="Aberto">Aberto</option>
+                        <option value="Em Andamento">Em Andamento</option>
+                        <option value="Finalizado">Finalizado</option>
+                    </select>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary mr-2">💾 Salvar O.S.</button>
+                    <a href="{{ url_for('login') }}" class="btn btn-secondary">Sair</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Formulário Empresa -->
+        <div class="tab-pane fade {% if active_tab == 'empresa' %}show active{% endif %}" id="tab-empresa" role="tabpanel">
+            <form method="POST" action="{{ url_for('cadastro_os') }}">
+                <input type="hidden" name="action" value="save_empresa">
+
+                <div class="form-group">
+                    <label for="nome">Nome da Empresa</label>
+                    <input id="nome" name="nome" class="form-control" required placeholder="Digite o nome da empresa">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="cnpj">CNPJ</label>
+                        <input id="cnpj" name="cnpj" class="form-control" placeholder="00.000.000/0000-00">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="contato">Contato</label>
+                        <input id="contato" name="contato" class="form-control" placeholder="Nome do responsável">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input id="email" name="email" class="form-control" type="email" placeholder="email@empresa.com">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="telefone">Telefone</label>
+                        <input id="telefone" name="telefone" class="form-control" placeholder="(00) 00000-0000">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="endereco">Endereço</label>
+                        <input id="endereco" name="endereco" class="form-control" placeholder="Rua, número, bairro, cidade">
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success mr-2">💾 Salvar Empresa</button>
+                    <a href="{{ url_for('login') }}" class="btn btn-secondary">Sair</a>
+                </div>
+            </form>
+        </div>
     </div>
-    
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</div>
+
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    // Mantém a aba ativa após o envio do formulário
+    $(function () {
+        let activeTab = "{{ active_tab }}";
+        if (activeTab === "empresa") {
+            $('#empresa-tab').tab('show');
+        } else {
+            $('#os-tab').tab('show');
+        }
+    });
+</script>
 </body>
 </html>

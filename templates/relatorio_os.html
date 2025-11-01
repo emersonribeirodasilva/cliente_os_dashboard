@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Relatório O.S.</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    /* Tabela responsiva e scroll horizontal */
+    .table-wrapper {
+      max-height: 600px;
+      overflow-y: auto;
+    }
+    /* Input de pesquisa */
+    #searchInput {
+      max-width: 300px;
+    }
+  </style>
+</head>
+<body class="p-3">
+  <div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+      <h4>Relatório de Ordens de Serviço</h4>
+      <div class="d-flex gap-2 flex-wrap">
+        <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Pesquisar O.S., Cliente ou Status">
+        <a class="btn btn-secondary btn-sm" href="{{ url_for('suporte_dashboard') }}">Voltar</a>
+        <a class="btn btn-primary btn-sm" href="{{ url_for('relatorio_os') }}">Atualizar</a>
+        <a class="btn btn-outline-success btn-sm" href="{{ url_for('relatorio_os_pdf') }}" target="_blank">Baixar PDF (Todos)</a>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="table table-striped table-bordered table-sm">
+        <thead class="thead-dark sticky-top">
+          <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Equipamento</th>
+            <th>Status</th>
+            <th>Data</th>
+            <th>Descrição</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="osTable">
+          {% for r in rows %}
+          <tr>
+            <td><a href="{{ url_for('relatorio_os_individual', os_id=r['id']) }}">{{ r['id'] }}</a></td>
+            <td>{{ r['cliente_nome'] or '-' }}</td>
+            <td>{{ r['equipamento_modelo'] or '-' }}</td>
+            <td>{{ r['status'] }}</td>
+            <td>{{ r['data_criacao'] }}</td>
+            <td>{{ r['descricao'] }}</td>
+            <td class="d-flex gap-1">
+              <a class="btn btn-sm btn-outline-primary" href="{{ url_for('relatorio_os_individual', os_id=r['id']) }}">Ver</a>
+              <a class="btn btn-sm btn-outline-success" href="{{ url_for('relatorio_os_individual_pdf', os_id=r['id']) }}" target="_blank">PDF</a>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="7" class="text-center text-muted">Nenhuma O.S. encontrada.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <!-- Filtro de pesquisa -->
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const tableRows = document.querySelectorAll('#osTable tr');
+
+    searchInput.addEventListener('keyup', function() {
+      const filter = searchInput.value.toLowerCase();
+      tableRows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,42 +1,81 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suporte Dashboard</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">    
-    <style>
-        body {
-            background: url("{{ url_for('static', filename='img/painel manutecao.jpg') }}") no-repeat center center fixed;
-            background-size: cover;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-      </style>  
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Painel - Suporte</title>
 
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  
+  <style>
+ body {
+    background: url("{{ url_for('static', filename='img/fundo.jpg') }}") no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Arial', sans-serif;
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
+  .navbar { z-index: 10; }
+</style>
 </head>
-<body class="dashboard-bg d-flex justify-content-center align-items-center min-vh-100">
-    <div class="container text-center p-5" style="background: rgba(255, 255, 255, 0.9); border-radius: 15px;">
-        <h2 class="mb-4">Bem-vindo ao Painel de Suporte</h2>
-        <div class="d-flex flex-column align-items-center gap-4">
-            <a href="{{ url_for('cadastro_cliente') }}" class="btn btn-primary btn-lg w-100 mb-3">Cadastrar Cliente</a>
-            <a href="{{ url_for('cadastro_usuario') }}" class="btn btn-primary btn-lg w-100 mb-3">Cadastro Usuario</a>
-            <a href="{{ url_for('acompanhamento_cliente') }}" class="btn btn-primary btn-lg w-100 mb-3">Acompanhar Cliente</a>
-            <a href="{{ url_for('cadastro_equipamento') }}" class="btn btn-primary btn-lg w-100 mb-3">Cadastrar Equipamento</a>
-            <a href="{{ url_for('cadastro_os') }}" class="btn btn-primary btn-lg w-100 mb-3">Cadastrar O.S</a>
-            <a href="{{ url_for('acompanhamento_os') }}" class="btn btn-primary btn-lg w-100 mb-3">Acompanhar O.S</a>
-            <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg w-100 mb-3">Dashboard</a>            
-        </div>
-        <button type="button" class="btn btn-secondary btn-block" onclick="window.history.back();">SAIR</button>
-    </div>
+<body>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Navbar com dropdowns -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand font-weight-bold" href="{{ url_for('suporte_dashboard') }}">SOLARES</a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav mr-auto">
+
+        <!-- Dropdown Navegação -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navegacaoDropdown" role="button" data-toggle="dropdown">
+            Navegação
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="{{ url_for('suporte_dashboard') }}"><i class="fas fa-home"></i> Início</a>
+            <a class="dropdown-item" href="{{ url_for('dashboard') }}"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a class="dropdown-item" href="{{ url_for('acompanhamento_os') }}"><i class="fas fa-clipboard-list"></i> Ordens</a>
+            <a class="dropdown-item" href="{{ url_for('lista_equipamentos') }}"><i class="fas fa-cogs"></i> Equipamentos</a>
+            <a class="dropdown-item" href="{{ url_for('estoque_baixa') }}"><i class="fas fa-trash-alt"></i> Estoque - Baixa</a>
+            <a class="dropdown-item" href="{{ url_for('compradores') }}"><i class="fas fa-handshake"></i> Compradores</a>
+            <a class="dropdown-item" href="{{ url_for('cadastro_cliente') }}"><i class="fas fa-users"></i> Clientes</a>
+          </div>
+        </li>
+
+        <!-- Dropdown Relatórios -->
+        <li class="nav-item dropdown ml-2">
+          <a class="nav-link dropdown-toggle" href="#" id="relatoriosDropdown" role="button" data-toggle="dropdown">
+            Relatórios
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="{{ url_for('relatorio_os') }}"><i class="fas fa-file-alt"></i> O.S.</a>
+            <a class="dropdown-item" href="{{ url_for('relatorio_baixa') }}"><i class="fas fa-trash-alt"></i> Estoque-Baixa</a>
+          </div>
+        </li>
+
+      </ul>
+
+    
+    </div>
+  </div>
+</nav>
+
+<!-- Main content vazio para mostrar imagem de fundo -->
+<main id="main" style="min-height: calc(100vh - 70px);">
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

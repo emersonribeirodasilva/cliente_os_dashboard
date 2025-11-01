@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lista de Equipamentos</title>
+
+<!-- Bootstrap -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+  body {
+    background-color: #f7f9fc;
+  }
+
+  .page-title {
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #2c3e50;
+  }
+
+  .table-responsive {
+    max-height: 450px;
+    overflow-y: auto;
+    border-radius: 8px;
+    background: white;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    background: #2c3e50;
+    color: white;
+    z-index: 2;
+    font-size: 14px;
+  }
+
+  .search-box {
+    max-width: 350px;
+  }
+</style>
+</head>
+
+<body>
+<div class="container mt-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="page-title">Equipamentos</h3>
+
+    <a href="{{ url_for('suporte_dashboard') }}" class="btn btn-secondary">⬅ Voltar</a>
+  </div>
+
+  <!-- Ações -->
+  <div class="mb-3 d-flex flex-wrap gap-2">
+    <a href="{{ url_for('cadastro_equipamento') }}" class="btn btn-success mr-2">➕ Cadastrar Equipamento</a>
+    <a href="{{ url_for('estoque_baixa') }}" class="btn btn-warning mr-2">📦 Estoque (Baixa)</a>
+  </div>
+
+  <!-- Barra de pesquisa -->
+  <div class="input-group mb-3 search-box">
+    <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar modelo, marca ou status...">
+    <div class="input-group-append">
+      <span class="input-group-text">🔎</span>
+    </div>
+  </div>
+
+  <!-- Tabela -->
+  <div class="table-responsive shadow">
+    <table class="table table-striped table-bordered mb-0" id="equipTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Modelo</th>
+          <th>Marca</th>
+          <th>Data Fabricação</th>
+          <th>Idade (anos)</th>
+          <th>Descrição</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in equipamentos %}
+        <tr>
+          <td>{{ e['id'] }}</td>
+          <td>{{ e['modelo'] }}</td>
+          <td>{{ e['marca'] }}</td>
+          <td>{{ e['data_fabricacao'] }}</td>
+          <td>{{ e['idade'] if e['idade'] is not none else '' }}</td>
+          <td>{{ e['descricao'] }}</td>
+          <td>{{ e['status'] }}</td>
+          <td>
+            <a href="{{ url_for('editar_equipamento', equip_id=e['id']) }}" class="btn btn-sm btn-primary">
+              Editar
+            </a>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="8" class="text-center">Nenhum equipamento cadastrado.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Script filtro -->
+<script>
+document.getElementById('searchInput').addEventListener('keyup', function () {
+  let filter = this.value.toLowerCase();
+  let rows = document.querySelectorAll("#equipTable tbody tr");
+
+  rows.forEach(row => {
+      let text = row.innerText.toLowerCase();
+      row.style.display = text.includes(filter) ? "" : "none";
+  });
+});
+</script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

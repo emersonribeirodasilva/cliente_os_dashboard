@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Ordem de Serviço #{{ os.id }}</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="p-3">
+  <div class="container">
+    <!-- Cabeçalho da empresa -->
+    <div class="d-flex justify-content-between align-items-start mb-4">
+      <div>
+        <h5>{{ company.name }}</h5>
+        <div class="small text-muted">
+          {{ company.address }}<br>
+          Tel: {{ company.phone }} • {{ company.email }}
+        </div>
+      </div>
+      <div class="text-right">
+        <h6>O.S. nº {{ os.id }}</h6>
+        <div class="small text-muted">{{ os.data_criacao }}</div>
+        <div class="mt-2">
+          <a class="btn btn-secondary btn-sm" href="{{ url_for('relatorio_os') }}">Voltar</a>
+          <a class="btn btn-success btn-sm" href="{{ url_for('relatorio_os_individual_pdf', os_id=os.id) }}" target="_blank">Baixar PDF</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dados da O.S. -->
+    <div class="card mb-3">
+      <div class="card-body">
+        <h6>Dados do Cliente</h6>
+        <p><strong>Nome:</strong> {{ os.cliente_nome or '-' }}<br>
+           <strong>Contato:</strong> {{ os.cliente_contato or '-' }}</p>
+
+        <h6>Equipamento</h6>
+        <p><strong>Modelo:</strong> {{ os.modelo or '-' }}<br>
+           <strong>Marca:</strong> {{ os.marca or '-' }}</p>
+
+        <h6>Descrição</h6>
+        <p>{{ os.descricao or '-' }}</p>
+
+        <h6>Status</h6>
+        <p>{{ os.status }}</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

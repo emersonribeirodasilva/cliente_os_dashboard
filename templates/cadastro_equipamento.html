@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Equipamento</title>
+    <title>{{ 'Editar Equipamento' if equipamento else 'Cadastro de Equipamento' }}</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
@@ -12,48 +12,81 @@
     <div class="container">
         <div class="row justify-content-center">    
             <div class="col-md-6">
-                <form method="POST" action="/cadastro_equipamento">
-                    <h3 class="text-center mb-4">Cadastro de Equipamento</h3>
+                <form method="POST" action="{{ url_for('editar_equipamento', equip_id=equipamento['id']) if equipamento else url_for('cadastro_equipamento') }}">
+                    <h3 class="text-center mb-4">{{ 'Editar Equipamento' if equipamento else 'Cadastro de Equipamento' }}</h3>
                     
                     <div class="form-group">
                         <label for="modelo">Modelo do equipamento</label>
-                        <input type="text" class="form-control" id="modelo" name="modelo" required>
+                        <input type="text" class="form-control" id="modelo" name="modelo" required value="{{ equipamento['modelo'] if equipamento else '' }}">
                     </div>
                     
                     <div class="form-group">
                         <label for="marca">Marca</label>
-                        <input type="text" class="form-control" id="marca" name="marca" required>
+                        <input type="text" class="form-control" id="marca" name="marca" required value="{{ equipamento['marca'] if equipamento else '' }}">
                     </div>
                     
                     <div class="form-group">
                         <label for="data_fabricacao">Data de Fabricação</label>
-                        <input type="date" class="form-control" id="data_fabricacao" name="data_fabricacao" required>
+                        <input type="date" class="form-control" id="data_fabricacao" name="data_fabricacao" required value="{{ equipamento['data_fabricacao'] if equipamento and equipamento['data_fabricacao'] else '' }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="idade">Idade (anos)</label>
+                        <input type="text" class="form-control" id="idade" name="idade" readonly value="{{ equipamento['idade'] if equipamento and equipamento['idade'] is not none else '' }}">
                     </div>
                     
                     <div class="form-group">
                         <label for="descricao">Descrição do Equipamento</label>
-                        <textarea class="form-control" id="descricao" name="descricao" rows="4" required></textarea>
+                        <textarea class="form-control" id="descricao" name="descricao" rows="4" required>{{ equipamento['descricao'] if equipamento else '' }}</textarea>
                     </div>
 
                     <div class="form-group">
-                        <label for="status">Status da O.S</label>
+                        <label for="status">Status</label>
                         <select class="form-control" id="status" name="status" required>
-                            <option value="Ativo">ATIVO</option>
-                            <option value="Inativo">INATIVO</option>
+                            <option value="Ativo" {% if equipamento and equipamento['status']=='Ativo' %}selected{% endif %}>ATIVO</option>
+                            <option value="Inativo" {% if equipamento and equipamento['status']=='Inativo' %}selected{% endif %}>INATIVO</option>
                         </select>
                     </div>
                     
-                  
-                    
-                    <button type="submit" class="btn btn-primary btn-block">Cadastrar Equipamento</button>
+                    <button type="submit" class="btn btn-primary btn-block">{{ 'Salvar' if equipamento else 'Cadastrar Equipamento' }}</button>
+
+                    <a href="{{ url_for('lista_equipamentos') }}" class="btn btn-info btn-block">Ver Lista de Equipamentos</a>
+
                     <button type="button" class="btn btn-secondary btn-block" onclick="window.history.back();">Voltar</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    function calcIdade(dateStr) {
+        if (!dateStr) return '';
+        const dob = new Date(dateStr);
+        const today = new Date();
+        let age = today.getFullYear() - dob.getFullYear();
+        const m = today.getMonth() - dob.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+        return age;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const dataInput = document.getElementById('data_fabricacao');
+        const idadeInput = document.getElementById('idade');
+
+        if (dataInput && idadeInput) {
+            if (dataInput.value) {
+                idadeInput.value = calcIdade(dataInput.value);
+            }
+
+            dataInput.addEventListener('change', function() {
+                idadeInput.value = calcIdade(this.value);
+            });
+        }
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
