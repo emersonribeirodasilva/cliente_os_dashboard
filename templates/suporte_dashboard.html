@@ -8,87 +8,74 @@
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  
   <style>
-    body { padding-top:56px; }
-    #sidebar { width:220px; position:fixed; top:56px; left:0; bottom:0; background:#fff; border-right:1px solid rgba(0,0,0,.06); padding:1rem; overflow:auto; }
-    #main { margin-left:220px; padding:1.5rem; min-height:100vh; background:#f6f7fb; display:flex; align-items:flex-start; }
-    @media(max-width:991px){ #sidebar{position:static;width:100%;height:auto;} #main{margin-left:0;} }
-    .small-muted{ color:var(--muted); font-size:.9rem; }
-    .hero-min { width:100%; border-radius:8px; padding:4.5rem 2rem; background: linear-gradient(180deg, rgba(9,30,66,0.03), rgba(255,255,255,0.6)); text-align:center; }
-    .hero-title { font-size:2.2rem; font-weight:700; color:var(--text); margin-bottom:0.5rem; }
-    .hero-actions { margin-top:1rem; display:flex; gap:1rem; justify-content:center; }
-  </style>
+ body {
+    background: url("{{ url_for('static', filename='img/fundo.jpg') }}") no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Arial', sans-serif;
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
+  .navbar { z-index: 10; }
+</style>
 </head>
 <body>
 
+<!-- Navbar com dropdowns -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
   <div class="container-fluid">
-    <button class="btn btn-outline-secondary d-lg-none mr-2" id="toggleSidebar"><i class="fas fa-bars"></i></button>
-    <a class="navbar-brand font-weight-bold" href="{{ url_for('suporte_dashboard') }}">Minha Empresa</a>
+    <a class="navbar-brand font-weight-bold" href="{{ url_for('suporte_dashboard') }}">SOLARES</a>
 
-    <div class="collapse navbar-collapse">
-      <ul class="navbar-nav mr-auto d-none d-lg-flex">
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('suporte_dashboard') }}">Início</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('compradores') }}">Compradores</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ url_for('lista_equipamentos') }}">Equipamentos</a></li>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav mr-auto">
+
+        <!-- Dropdown Navegação -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navegacaoDropdown" role="button" data-toggle="dropdown">
+            Navegação
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="{{ url_for('suporte_dashboard') }}"><i class="fas fa-home"></i> Início</a>
+            <a class="dropdown-item" href="{{ url_for('dashboard') }}"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a class="dropdown-item" href="{{ url_for('acompanhamento_os') }}"><i class="fas fa-clipboard-list"></i> Ordens</a>
+            <a class="dropdown-item" href="{{ url_for('lista_equipamentos') }}"><i class="fas fa-cogs"></i> Equipamentos</a>
+            <a class="dropdown-item" href="{{ url_for('estoque_baixa') }}"><i class="fas fa-trash-alt"></i> Estoque - Baixa</a>
+            <a class="dropdown-item" href="{{ url_for('compradores') }}"><i class="fas fa-handshake"></i> Compradores</a>
+            <a class="dropdown-item" href="{{ url_for('cadastro_cliente') }}"><i class="fas fa-users"></i> Clientes</a>
+          </div>
+        </li>
+
+        <!-- Dropdown Relatórios -->
+        <li class="nav-item dropdown ml-2">
+          <a class="nav-link dropdown-toggle" href="#" id="relatoriosDropdown" role="button" data-toggle="dropdown">
+            Relatórios
+          </a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="{{ url_for('relatorio_os') }}"><i class="fas fa-file-alt"></i> O.S.</a>
+            <a class="dropdown-item" href="{{ url_for('relatorio_baixa') }}"><i class="fas fa-trash-alt"></i> Estoque-Baixa</a>
+          </div>
+        </li>
+
       </ul>
 
-      <div class="ml-auto d-flex align-items-center">
-        <span class="text-muted mr-3 small">{{ session.get('username') if session else '' }}</span>
-        <a class="btn btn-outline-primary btn-sm" href="{{ url_for('cadastro_equipamento') }}">Novo Equip.</a>
-      </div>
+    
     </div>
   </div>
 </nav>
 
-<!-- Sidebar (simples navegação) -->
-<aside id="sidebar" class="d-none d-lg-block">
-  <h6 class="text-muted">Navegação</h6>
-  <nav class="nav flex-column mb-3">
-    <a class="nav-link" href="{{ url_for('suporte_dashboard') }}"><i class="fas fa-home"></i> Início</a>
-    <a class="nav-link" href="{{ url_for('dashboard') }}"><i class="fas fa-chart-line"></i> Dashboard</a>
-    <a class="nav-link" href="{{ url_for('acompanhamento_os') }}"><i class="fas fa-clipboard-list"></i> Ordens</a>
-    <a class="nav-link" href="{{ url_for('lista_equipamentos') }}"><i class="fas fa-cogs"></i> Equipamentos</a>
-    <a class="nav-link" href="{{ url_for('estoque_baixa') }}"><i class="fas fa-trash-alt"></i> Estoque - Baixa</a>
-    <a class="nav-link" href="{{ url_for('compradores') }}"><i class="fas fa-handshake"></i> Compradores</a>
-    <a class="nav-link" href="{{ url_for('cadastro_cliente') }}"><i class="fas fa-users"></i> Clientes</a>
-  </nav>
-
-  <hr>
-
-  <h6 class="text-muted">Informações</h6>
-  <p class="small text-muted">Use os relatórios para exportar/visualizar O.S. e estoque de baixa.</p>
-</aside>
-
-<!-- Main content: minimal hero + report links -->
-<main id="main">
-  <div class="container-fluid">
-    <div class="hero-min">
-      <div class="hero-title">Soluções em Manutenção</div>
-
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="{{ url_for('relatorio_os') }}"><i class="fas fa-file-alt mr-2"></i> Relatório O.S.</a>
-        <a class="btn btn-warning" href="{{ url_for('relatorio_baixa') }}"><i class="fas fa-trash-alt mr-2"></i> Relatório Estoque-Baixa</a>
-      </div>
-    </div>
-  </div>
+<!-- Main content vazio para mostrar imagem de fundo -->
+<main id="main" style="min-height: calc(100vh - 70px);">
 </main>
 
-<footer class="bg-light text-center py-3" style="margin-left:220px;">
-  <div class="container">
-    <small>© {{ config.get('NAME', 'Minha Empresa') }} - Todos os direitos reservados.</small>
-  </div>
-</footer>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script>
-  document.getElementById('toggleSidebar')?.addEventListener('click', function(){
-    const sb = document.getElementById('sidebar');
-    if(!sb) return;
-    sb.classList.toggle('d-none');
-  });
-</script>
 </body>
 </html>

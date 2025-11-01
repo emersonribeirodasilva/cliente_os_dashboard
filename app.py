@@ -56,7 +56,7 @@ def get_weather(city_name):
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
-    city_name = "Sao Paulo"  # ID padrão (Nova York)
+    city_name = "Sao Paulo"  # ID padrão 
     
     if request.method == 'POST':  # Verifica se o formulário foi enviado
         city_name = request.form.get('city_id', city_name)  # Pega o ID do formulário, se existir
