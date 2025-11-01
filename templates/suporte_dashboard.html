@@ -8,22 +8,64 @@
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-  
-  <style>
- body {
-    background: url("{{ url_for('static', filename='img/fundo.jpg') }}") no-repeat center center fixed;
-    background-size: cover;
-    font-family: 'Arial', sans-serif;
-    color: var(--text-color);
-    margin: 0;
-    padding: 0;
+
+<style>
+body {
+  background: url("{{ url_for('static', filename='img/fundo.jpg') }}") no-repeat center center fixed;
+  background-size: cover;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  margin: 0;
+  padding: 0;
 }
-  .navbar { z-index: 10; }
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 76px; /* altura da navbar */
+  left: 0;
+  width: 260px;
+  height: calc(100vh - 76px);
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+  padding: 20px 15px;
+  overflow-y: auto;
+  border-right: 1px solid rgba(255,255,255,0.15);
+}
+
+/* card indicador lateral */
+.sidebar .card-dashboard {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 12px;
+  padding: 18px;
+  color: white;
+  margin-bottom: 18px;
+  transition: 0.2s;
+}
+
+.sidebar .card-dashboard:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.03);
+}
+
+.sidebar i {
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+/* área principal */
+.content {
+  margin-left: 260px;
+  margin-top: 90px;
+  padding: 20px;
+}
 </style>
+
 </head>
 <body>
 
-<!-- Navbar com dropdowns -->
+<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
   <div class="container-fluid">
     <a class="navbar-brand font-weight-bold" href="{{ url_for('suporte_dashboard') }}">SOLARES</a>
@@ -35,11 +77,9 @@
     <div class="collapse navbar-collapse" id="navbarContent">
       <ul class="navbar-nav mr-auto">
 
-        <!-- Dropdown Navegação -->
+        <!-- Navegação -->
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navegacaoDropdown" role="button" data-toggle="dropdown">
-            Navegação
-          </a>
+          <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Navegação</a>
           <div class="dropdown-menu">
             <a class="dropdown-item" href="{{ url_for('suporte_dashboard') }}"><i class="fas fa-home"></i> Início</a>
             <a class="dropdown-item" href="{{ url_for('dashboard') }}"><i class="fas fa-chart-line"></i> Dashboard</a>
@@ -51,11 +91,9 @@
           </div>
         </li>
 
-        <!-- Dropdown Relatórios -->
+        <!-- Relatórios -->
         <li class="nav-item dropdown ml-2">
-          <a class="nav-link dropdown-toggle" href="#" id="relatoriosDropdown" role="button" data-toggle="dropdown">
-            Relatórios
-          </a>
+          <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">Relatórios</a>
           <div class="dropdown-menu">
             <a class="dropdown-item" href="{{ url_for('relatorio_os') }}"><i class="fas fa-file-alt"></i> O.S.</a>
             <a class="dropdown-item" href="{{ url_for('relatorio_baixa') }}"><i class="fas fa-trash-alt"></i> Estoque-Baixa</a>
@@ -63,17 +101,45 @@
         </li>
 
       </ul>
-
-    
     </div>
   </div>
 </nav>
 
-<!-- Main content vazio para mostrar imagem de fundo -->
-<main id="main" style="min-height: calc(100vh - 70px);">
-</main>
+<!-- Sidebar Indicadores -->
+<div class="sidebar">
 
+  <div class="card-dashboard text-center">
+    <i class="fas fa-clipboard-list"></i>
+    <h5>OS Abertas</h5>
+    <h3>12</h3>
+  </div>
 
+  <div class="card-dashboard text-center">
+    <i class="fas fa-check-circle"></i>
+    <h5>OS Concluídas</h5>
+    <h3>34</h3>
+  </div>
+
+  <div class="card-dashboard text-center">
+    <i class="fas fa-tools"></i>
+    <h5>Equipamentos</h5>
+    <h3>78</h3>
+  </div>
+
+  <div class="card-dashboard text-center">
+    <i class="fas fa-users"></i>
+    <h5>Clientes</h5>
+    <h3>21</h3>
+  </div>
+
+</div>
+
+<!-- Conteúdo Principal -->
+<div class="content">
+  <!-- Deixe vazio ou adicione algo depois -->
+</div>
+
+<!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
